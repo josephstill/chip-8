@@ -24,7 +24,6 @@ std::vector<RomParser::command> RomParser::parseRom(std::string romFileName)
 
 		if (readIndex != 0)
 		{
-			unsigned char currentCommand = (char)0x00;
 			for (int i = 0; i < 16; ++i)
 			{
 				if (i % 2 == 0)
