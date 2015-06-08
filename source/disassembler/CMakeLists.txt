@@ -1,8 +1,10 @@
 set(SRC_FILES
     ${SRC_FILES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/RomParser.cpp
     PARENT_SCOPE)
 
 set(HEADER_FILES
     ${HEADER_FILES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/RomParser.h
     PARENT_SCOPE)
 
