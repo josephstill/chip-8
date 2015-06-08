@@ -28,7 +28,7 @@ int main(int argc, char**argv)
 	{
 		switch (condition)
 		{
-		case 'f':
+		case 'f': // Set File
 		{
 			std::stringstream ss;
 			ss << optarg;
@@ -36,17 +36,17 @@ int main(int argc, char**argv)
 			fileSet = true;
 			break;
 		}
-		case 'h':
+		case 'h': // Help
 			printUsage();
 			return 0;
 			break;
-		case 'd':
+		case 'd': // Disassemble Mode
 			disassemble = true;
 			break;
-		case 'e':
+		case 'e': // Emulate Mode
 			emulate = true;
 			break;
-		case 'x':
+		case 'x': // Hex Dump Mode
 			hexDump = true;
 			break;
 		default:
@@ -62,7 +62,7 @@ int main(int argc, char**argv)
 		return 1;
 	}
 
-
+	// TODO: Validate File
 
 	if (hexDump && !(emulate || disassemble))
 	{
