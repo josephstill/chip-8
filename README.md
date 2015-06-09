@@ -9,7 +9,7 @@ Building:
 Running the build.sh script should be sufucient to build the project.
 The binary chip-8 will be placed in the build folder.
 
-Hex Dump
+Hex Dump:<br>
 Disassembling:
 Emulate:
 
