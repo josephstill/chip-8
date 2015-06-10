@@ -9,15 +9,16 @@
     <h2>Dependencies</h2>
   </header>
     <p>The following is a list of libraries that you will need to build and run the project.</p>
-    <ul style="list-style-type:disc>
+    <ul style="list-style-type:disc">
       <li>CMake 2.6 or Later</li>
+      <li>Qt (More info soon)</li>
     </ul>
   <br>
   <header>
     <h2>Development Environment</h2>
   </header>
     <p>The following is a profile of my development environment</p>
-    <ul style="list-style-type:disc>
+    <ul style="list-style-type:disc">
       <li>Kubuntu 14.4</li>
       <li>CMake 2.8.12.2</li>
       <li>Eclipse 3.8.1</li>
@@ -60,7 +61,7 @@
     <h2>Links</h2>
   </header>
   <p>The following are links to the sources of information that I have used in working on this project</p>
-    <ul style="list-style-type:disc>
+    <ul style="list-style-type:disc">
       <li><a href="http://devernay.free.fr/hacks/chip8/C8TECH10.HTM">Cowgod's Chip-8 Technical Reference</a></li>
       <li><a href="http://www.multigesture.net/wp-content/uploads/mirror/goldroad/chip8_instruction_set.shtml">Another Chip-8 Reference</a></li>
       <li><a href="http://emulator101.com/">Emulator 101</a></li>
