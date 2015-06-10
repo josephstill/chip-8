@@ -26,7 +26,6 @@ void DisassemblyEngine::disassemble()
 void DisassemblyEngine::decode(unsigned int address)
 {
 	while (this->decodeHelper(address) && address < this->buffer.size()) ++address;
-
 }
 
 bool DisassemblyEngine::decodeHelper(unsigned int address)
@@ -40,10 +39,8 @@ bool DisassemblyEngine::decodeHelper(unsigned int address)
 	unsigned char operation[2];
 	operation[0] = this->buffer[address];
 	operation[1] = this->buffer[address + 1];
-	std::cout << std::hex << std::setfill('0');
-	std::cout << std::setw(2) << std::hex << (int)operation[0] << std::hex << (int)operation[1] << std::endl;
-	this->engineOutput[address] = "";
-	std::cout << AssemblyUtils::decode(operation);
+	this->engineOutput[address] = AssemblyUtils::decode(operation);
+	std::cout << this->engineOutput[address] << std::endl;
 	address += 2;
 	return true;
 }
