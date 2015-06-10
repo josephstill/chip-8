@@ -1,6 +1,5 @@
 # chip-8
-This is an exploration of chip-8 and hardware emulation. Following 
-are some instructions on building and running chip-8.<br>
+This is an exploration of chip-8 and hardware emulation. Following are some instructions on building and running chip-8.<br>
 <br>
 Dependencies:<br>
 CMake version 2.6 or later<br>
@@ -15,5 +14,5 @@ Disassembling:<br>
 <br>
 Emulate:<br>
 <br>
-Notes:
+Notes:<br>
 

@@ -24,18 +24,23 @@ public:
 	};
 
 	/**
-	 * Parses the ROM file into individual commands and provides the commands in a vector.
-	 * @param romFileName The path to the file to parse
-	 * @return a vector of commands
-	 */
-	static std::vector<RomParser::command> parseRom(std::string romFileName);
-
-	/**
 	 * Creates a hex dump of the provided ROM file.
 	 * @param romFileName The path to the file to parse.
 	 * @return a string containing the hex dump.
 	 */
 	static std::string hexDump(std::string romFileName);
+
+	/**
+	 *
+	 */
+	static std::vector<unsigned char> loadBuffer(std::string romFileName);
+
+	/**
+	 * Parses the ROM file into individual commands and provides the commands in a vector.
+	 * @param romFileName The path to the file to parse
+	 * @return a vector of commands
+	 */
+	static std::vector<RomParser::command> parseRom(std::string romFileName);
 
 private:
 	// No construction

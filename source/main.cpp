@@ -1,4 +1,5 @@
 #include "disassembler/RomParser.h"
+#include "Disassembler.h"
 #include <iostream>
 #include <sstream>
 #include <unistd.h> // command line parsing
@@ -75,7 +76,7 @@ int main(int argc, char**argv)
 	}
 	else if(disassemble && !(hexDump || emulate))
 	{
-		std::cout << "Coming Soon" << std::endl;
+		Disassembler d(file);
 	}
 	else
 	{

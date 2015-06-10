@@ -5,10 +5,12 @@ add_subdirectory(disassembler)
 
 set(SRC_FILES
     ${SRC_FILES}
+    Disassembler.cpp
     main.cpp)
 
 set(HEADER_FILES
-    ${HEADER_FILES})
+    ${HEADER_FILES}
+    Disassembler.h)
 
 # Make sure C++ 11
 add_definitions(-std=c++11)

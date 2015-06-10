@@ -1,5 +1,6 @@
 #include "DisassemblyEngine.h"
 #include "RomParser.h"
+#include "AssemblyUtils.h"
 
 #include <iostream> //TODO Remove Me
 #include <iomanip> //TODO Remove me
@@ -24,7 +25,8 @@ void DisassemblyEngine::disassemble()
 
 void DisassemblyEngine::decode(unsigned int address)
 {
-	while (this->decodeHelper(address));
+	while (this->decodeHelper(address) && address < this->buffer.size()) ++address;
+
 }
 
 bool DisassemblyEngine::decodeHelper(unsigned int address)
@@ -41,7 +43,7 @@ bool DisassemblyEngine::decodeHelper(unsigned int address)
 	std::cout << std::hex << std::setfill('0');
 	std::cout << std::setw(2) << std::hex << (int)operation[0] << std::hex << (int)operation[1] << std::endl;
 	this->engineOutput[address] = "";
-	//TODO do decode
+	std::cout << AssemblyUtils::decode(operation);
 	address += 2;
 	return true;
 }
