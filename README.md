@@ -78,7 +78,8 @@
   </header>
   <p>Running the disassembly tool will provide you with assembly listings for the opcodes found withing the ROM file. Currently this feature is only available in the command line tool; however, it will be added to the GUI once it is implemented. The format of this output is linear from <code>0x0200</code> until the end of the program data. For each opcode, the data section will be parsed in two byte increments; However, there can be one byte sections of data in the ROM, meaning that it is not a requirement that an opcode start at an even offset within the file. Thus, raw data will be parsed in one byte increments. For the command line tool, the disassembly feature is activated using the -d flag and requires that -f be specified with a file path. The output looks like this:</p>
   <pre>
-    <code>
+    <samp>
+      joseph@Joseph-MacBookPro$ ./chip-8 -d -f ../roms/Fishie.ch8 
       0x200          CLS
       0x202          LD I, 0x220
       0x204          LD V2, 0x08
@@ -104,7 +105,7 @@
       0x246          DATA 0x38
       ...
       0x29f          DATA 0x00
-    </code>
+    </samp>
   </pre>
   <p>This particular output is for the ROM that produced the hex dump shown above. The assembly listings used are the ones found <a href="http://devernay.free.fr/hacks/chip8/C8TECH10.HTM">here</a>. I have also chosen to add labels to the jump commands instead of leaving the hex address as the argument. Also, from inspecting the above output it is more clear that the command at <code>0x20e</code> jumps to itself.</p>
   <p>From working with the disassembly, there are a few features that I would like to see implemented, should I have time. The most meaningful would be a way to make sense of the data sections that are found in the ROM file. It appears that these memory locations are the sprites that are drawn by the emulator; a graphical representation of these would be a nice feature and I intend on adding it should there be time. The second feature that I thing would be interesting is an assembler. I have included some groundwork for an assembler; however, it is outside of the scope of the current iteration of this project.</p>
