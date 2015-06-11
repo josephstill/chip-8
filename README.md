@@ -40,19 +40,21 @@
     <h3>Hex Dumps</h3>
   </header>
   <p>Running the hex dump feature will display the bytes found inside the ROM with address offsets for a reference point. Currently this feature is only available in the command line tool; however, if there is time, a GUI will be added for this feature. The purpose for including this extra feature was that I found it useful when investigating bugs in file parsing. The hex dump feature is activated with the -x flag and requires that -f be specified with a file path. The output looks like this:</p>
+  <pre>
   <samp>
-    joseph@Joseph-MacBookPro$ ./chip-8 -x -f ../roms/Fishie.ch8 <br>
-    00000000 00e0 a220 6208 60f8 7008 6110 4020 120e<br> 
-    00000010 d108 f21e 7108 4130 1208 1210 0000 0000<br> 
-    00000020 0000 0000 0018 3c3c 0000 0000 0000 0000<br> 
-    00000030 0000 0000 0000 0000 0000 0000 0000 0000<br> 
-    00000040 3e3f 3f3b 3938 3838 0000 80c1 e7ff 7e3c<br> 
-    00000050 001f fff9 c080 0303 0080 e0f0 7838 1c1c<br> 
-    00000060 3838 393b 3f3f 3e3c 78fc fecf 8703 0100<br> 
-    00000070 0000 0000 80e3 ff7f 1c38 3870 f0e0 c000<br> 
-    00000080 3c18 0000 0000 0000 0000 0000 0000 0000<br> 
-    00000090 0000 0000 0000 0000 0000 0000 0000 0000<br> 
+    joseph@Joseph-MacBookPro$ ./chip-8 -x -f ../roms/Fishie.ch8
+    00000000 00e0 a220 6208 60f8 7008 6110 4020 120e
+    00000010 d108 f21e 7108 4130 1208 1210 0000 0000 
+    00000020 0000 0000 0018 3c3c 0000 0000 0000 0000 
+    00000030 0000 0000 0000 0000 0000 0000 0000 0000 
+    00000040 3e3f 3f3b 3938 3838 0000 80c1 e7ff 7e3c 
+    00000050 001f fff9 c080 0303 0080 e0f0 7838 1c1c 
+    00000060 3838 393b 3f3f 3e3c 78fc fecf 8703 0100 
+    00000070 0000 0000 80e3 ff7f 1c38 3870 f0e0 c000 
+    00000080 3c18 0000 0000 0000 0000 0000 0000 0000 
+    00000090 0000 0000 0000 0000 0000 0000 0000 0000 
   </samp>
+  </pre>
   <br>
   <p>The hex dump was the first feature that I implemented as I was trying to become more familiar with the opcodes. Upon inspection of the hex dump, there is plenty of non opcode grouping of bytes. Another interesting thing that stands out, is the value at <code>0x000e</code>. Remembering that space up to <code>0x0200</code> is reserved for the system, this line would be in memory at <code>0x020e</code>. The command <code>0x120e</code> is a jump to <code>0x020e</code> which is a jump to itself.</p>
   <header>
@@ -60,7 +62,7 @@
   </header>
   <p>Running the disassembly tool will provide you with assembly listings for the opcodes found withing the ROM file. Currently this feature is only available in the command line tool; however, it will be added to the GUI once it is implemented. The format of this output is linear from <code>0x0200</code> until the end of the program data. For each opcode, the data section will be parsed in two byte increments; However, there can be one byte sections of data in the ROM, meaning that it is not a requirement that an opcode start at an even offset within the file. Thus, raw data will be parsed in one byte increments. For the command line tool, the disassembly feature is activated using the -d flag and requires that -f be specified with a file path. The output looks like this:</p>
   <pre>
-  <samp>
+    <samp>
 0x200          CLS
 0x202          LD I, 0x220
 0x204          LD V2, 0x08
@@ -86,8 +88,9 @@
 0x246          DATA 0x38
 ...
 0x29f          DATA 0x00
-  </samp>
+    </samp>
   <pre>
+  <p> More information </p>
   <header>
     <h3>Emulation</h3>
   </header>
