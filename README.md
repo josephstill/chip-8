@@ -121,7 +121,7 @@
   <header>
     <a name="Links"><h2>6. Links</h2></a>
   </header>
-  <p>The following are links to the sources of information that I have used in working on this project</p>
+  <p>The following are links to the sources of information that I have used in working on this project:</p>
     <ul style="list-style-type:disc">
       <li><a href="http://devernay.free.fr/hacks/chip8/C8TECH10.HTM">Cowgod's Chip-8 Technical Reference</a></li>
       <li><a href="http://www.multigesture.net/wp-content/uploads/mirror/goldroad/chip8_instruction_set.shtml">Another Chip-8 Reference</a></li>
