@@ -58,7 +58,36 @@
   <header>
     <h3>Disassembly</h3>  
   </header>
-  <p>Information will be added as the feature develops</p>
+  <p>Running the disassembly tool will provide you with assembly listings for the opcodes found withing the ROM file. Currently this feature is only available in the command line tool; however, it will be added to the GUI once it is implemented. The format of this output is linear from <code>0x0200</code> until the end of the program data. For each opcode, the data section will be parsed in two byte increments; However, there can be one byte sections of data in the ROM, meaning that it is not a requirement that an opcode start at an even offset within the file. Thus, raw data will be parsed in one byte increments. For the command line tool, the disassembly feature is activated using the -d flag and requires that -f be specified with a file path. The output looks like this:</p>
+  <pre>
+  <samp>
+0x200          CLS
+0x202          LD I, 0x220
+0x204          LD V2, 0x08
+0x206          LD V0, 0xf8
+0x208 link_208 ADD V0, 0x08
+0x20a          LD V1, 0x10
+0x20c          SNE V0, 0x20
+0x20e link_20e JP link_20e
+0x210 link_210 DRW  V1, V0, 0x8
+0x212          ADD I, V2
+0x214          ADD V1, 0x08
+0x216          SNE V1, 0x30
+0x218          JP link_208
+0x21a          JP link_210
+0x21c          DATA 0x00
+...
+0x240          DATA 0x3e
+0x241          DATA 0x3f
+0x242          DATA 0x3f
+0x243          DATA 0x3b
+0x244          DATA 0x39
+0x245          DATA 0x38
+0x246          DATA 0x38
+...
+0x29f          DATA 0x00
+  </samp>
+  <pre>
   <header>
     <h3>Emulation</h3>
   </header>
