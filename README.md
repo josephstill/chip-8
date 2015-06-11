@@ -43,18 +43,15 @@
   <header>
     <h3>Disassembly</h3>  
   </header>
-  <p>Information will be added as the feature develops</p>  
+  <p>Information will be added as the feature develops</p>
   <header>
     <h3>Emulation</h3>
   </header>
-  <p>Information will be added as the feature develops</p>  
+  <p>Information will be added as the feature develops</p>
   <br>
   <header>
-    <h2>Notes</h2>
-  </header>
-  <br>
-  <header>
-    <h2>Lessons Learned</h2>
+    <h2>Notes and Lessons Learned</h2>
+    <p>From looking through some of the sample ROMs, it looks like the jumps may not always fall on an even number instruction. There is an example of this in Space Invaders, which starts with a jump to 0x225. It also appears that there is non instruction data inside some of the ROMs which will make linear parsing of instructions inaccurate.</p>
   </header>
   <br>
   <header>
