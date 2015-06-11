@@ -12,12 +12,17 @@
     <li><a href="#Development">Development Environment</a></li>
     <li><a href="#Building">Building</a></li>
     <li><a href="#Features">Features</a></li>
+      <ul>
+        <li><a href="#Hex">Hex Dump</a></li>
+        <li><a href="#Disassembly">Disassembly</a></li>
+        <li><a href="#Emulation">Emulation</a></li>
+      </ul>
     <li><a href="#Notes">Notes and Lessons Learned</a></li>
     <li><a href="#Links">Links</a></li>
   </ol>
   <br>
   <header>
-    <a name="Dependencies"><h2>1 Dependencies</h2></a>
+    <a name="Dependencies"><h2>1. Dependencies</h2></a>
   </header>
     <p>The following is a list of libraries that you will need to build and run the project.</p>
     <ul style="list-style-type:disc">
@@ -26,7 +31,7 @@
     </ul>
   <br>
   <header>
-    <a name="Development"><h2>2 Development Environment</h2></a>
+    <a name="Development"><h2>2. Development Environment</h2></a>
   </header>
     <p>The following is a profile of my development environment</p>
     <ul style="list-style-type:disc">
@@ -39,12 +44,12 @@
     </ul>
     <br>
   <header>
-    <a name="Building"><h2>3 Building</h2></a>
+    <a name="Building"><h2>3. Building</h2></a>
   </header>
   <p>Once the dependencies are installed and the source is downloaded, the build.sh script in the root directory of the project tree should do the work for you. It will change to the build subdirectory and run CMake for you. The output will be a binary called chip-8 and will be located in the build directory along side other build artifacts.</p>
   <br>
   <header>
-    <a name="Features"><h2>4 Features</h2></a>
+    <a name="Features"><h2>4. Features</h2></a>
     <p>The following is information regarding the features of the emulator and disassembler.</p>
   </header>
   <header>
@@ -109,12 +114,12 @@
   <p>Information will be added as the feature develops</p>
   <br>
   <header>
-    <a name="Notes"><h2>5 Notes and Lessons Learned</h2></a>
+    <a name="Notes"><h2>5. Notes and Lessons Learned</h2></a>
   </header>  
   <p>From looking through some of the sample ROMs, it looks like the jumps may not always fall on an even number instruction. There is an example of this in Space Invaders, which starts with a jump to 0x225. It also appears that there is non instruction data inside some of the ROMs which will make linear parsing of instructions inaccurate. My search led me to a process called recursive decent which involves augmenting a linear disassembly by following links and branches. I will treat any left over information as data and have updated the disassembly output display it. Since I have seen some jumps to uneven address and addresses must be of even size, I am displaying the data in nibble intervals to ensure all of it is displayed.</p>
   <br>
   <header>
-    <a name="Links"><h2>6 Links</h2></a>
+    <a name="Links"><h2>6. Links</h2></a>
   </header>
   <p>The following are links to the sources of information that I have used in working on this project</p>
     <ul style="list-style-type:disc">
