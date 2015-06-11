@@ -13,7 +13,7 @@
     <li><a href="#Building">Building</a></li>
     <li><a href="#Features">Features</a></li>
       <ul>
-        <li><a href="#Hex">Hex Dump</a></li>
+        <li><a href="#Hex">Hex Dumps</a></li>
         <li><a href="#Disassembly">Disassembly</a></li>
         <li><a href="#Emulation">Emulation</a></li>
       </ul>
