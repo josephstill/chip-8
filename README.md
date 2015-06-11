@@ -65,7 +65,7 @@
       <li><a href="http://www.pong-story.com/chip8/">David Winter's Chip-8 Emulation Page</a></li>
       <li><a href="https://en.wikipedia.org/wiki/CHIP-8">Wikipedia</a></li>
       <li><a href="http://resources.infosecinstitute.com/linear-sweep-vs-recursive-disassembling-algorithm/">Recursive Disassembly</a></li>
-      <li><a href="http://neilscomputerblog.blogspot.com/2011/10/disassembly-algorithms.html">Disassembly Algorithms</a></li>  
+      <li><a href="http://neilscomputerblog.blogspot.com/2011/10/disassembly-algorithms.html">Disassembly Algorithms</a></li>
       <li><a href="http://reverseengineering.stackexchange.com/questions/2347/what-is-the-algorithm-used-in-recursive-traversal-disassembly">Stack Exchange</a></li>  
     </ul>
 </article>
