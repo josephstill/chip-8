@@ -4,9 +4,15 @@
     <p>This is an exploration of chip-8 and hardware emulation. The goal of this project is to disassemble a chip 8 ROM and begin to understand the instruction set within. The next step will be to run the ROM on an emulator. Through this project I hope to learn a good bit about how hardware emulation works as well as become more comfortable with byte code and assembly language.</p>
   </header>
   <p> The following information will provide details in building and running the emulator as well as lessons learned and a summary of my experience with this project. I will also provide links for the purpose of record keeping and quick reference.</p>
+  <header>
+    <h2>Contents</h2>
+  </header>
+  <ul>
+    <li><a href="Dependencies">Dependencies</a></li>
+  </ul>
   <br>
   <header>
-    <h2>Dependencies</h2>
+    <a name="Dependencies"><h2>Dependencies</h2></a>
   </header>
     <p>The following is a list of libraries that you will need to build and run the project.</p>
     <ul style="list-style-type:disc">
@@ -90,7 +96,7 @@
       0x29f          DATA 0x00
     </code>
   </pre>
-  <p>The assembly listings used are the ones found <a href="http://devernay.free.fr/hacks/chip8/C8TECH10.HTM">here</a>. I have also chosen to add labels to the jump commands instead of leaving the hex address as the argument. Also, from inspecting the above output it is more clear that the command at <code>0x20e</code> jumps to itself.</p>
+  <p>This particular output is for the ROM that produced the hex dump shown above. The assembly listings used are the ones found <a href="http://devernay.free.fr/hacks/chip8/C8TECH10.HTM">here</a>. I have also chosen to add labels to the jump commands instead of leaving the hex address as the argument. Also, from inspecting the above output it is more clear that the command at <code>0x20e</code> jumps to itself.</p>
   <p>From working with the disassembly, there are a few features that I would like to see implemented, should I have time. The most meaningful would be a way to make sense of the data sections that are found in the ROM file. It appears that these memory locations are the sprites that are drawn by the emulator; a graphical representation of these would be a nice feature and I intend on adding it should there be time. The second feature that I thing would be interesting is an assembler. I have included some groundwork for an assembler; however, it is outside of the scope of the current iteration of this project.</p>
   <header>
     <h3>Emulation</h3>
