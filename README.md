@@ -27,7 +27,7 @@
     <p>The following is a list of libraries that you will need to build and run the project.</p>
     <ul style="list-style-type:disc">
       <li>CMake 2.6 or Later</li>
-      <li>Qt (More info soon)</li>
+      <li>Qt 4</li>
     </ul>
   <br>
   <header>

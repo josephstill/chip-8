@@ -1,18 +1,30 @@
-cmake_minimum_required (VERSION 2.6)
-project (Chip-8 CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+PROJECT(Chip-8 CXX)
 
-add_subdirectory(disassembler)
+ADD_SUBDIRECTORY(disassembler)
 
-set(SRC_FILES
+FIND_PACKAGE(Qt4 REQUIRED)
+INCLUDE(${QT_USE_FILE})
+
+SET(SRC_FILES
     ${SRC_FILES}
     Disassembler.cpp
+    MainWindow.cpp
     main.cpp)
 
-set(HEADER_FILES
+SET(HEADER_FILES
     ${HEADER_FILES}
     Disassembler.h)
+    
+#SET(QT_UI_FILES
+#    ${QT_UI_FILES})      
+#QT4_WRAP_UI(UISrcs $QT_UI_FILES)
+    
+SET(QT_WRAP_HEADERS
+    ${QT_WRAP_HEADERS}
+    MainWindow.h)    
+QT4_WRAP_CPP(MOCSrcs ${QT_WRAP_HEADERS})
 
-# Make sure C++ 11
-add_definitions(-std=c++11)
-
-add_executable(chip-8 ${SRC_FILES} ${HEADER_FILES})
+ADD_DEFINITIONS(-std=c++11)
+ADD_EXECUTABLE(chip-8 ${SRC_FILES} ${HEADER_FILES} ${MOCSrcs})
+TARGET_LINK_LIBRARIES(chip-8 ${QT_LIBRARIES})

@@ -1,5 +1,7 @@
 #include "disassembler/RomParser.h"
 #include "Disassembler.h"
+#include "MainWindow.h"
+#include <QApplication>
 #include <iostream>
 #include <sstream>
 #include <unistd.h> // command line parsing
@@ -23,9 +25,10 @@ int main(int argc, char**argv)
 	bool emulate = false;
 	bool disassemble = false;
 	bool fileSet = false;
+	bool launchUi = false;
 	std::string file;
 
-	while ((condition = getopt(argc, argv, "f:hxde")) != -1)
+	while ((condition = getopt(argc, argv, "f:hxdeu")) != -1)
 	{
 		switch (condition)
 		{
@@ -58,31 +61,38 @@ int main(int argc, char**argv)
 
 	if (!fileSet)
 	{
-		std::cout << "You must set a file to load" << std::endl;
-		printUsage();
-		return 1;
+		QApplication::setOrganizationName("Joseph Walker");
+		QApplication::setApplicationName("Application Example");
+		QApplication::setApplicationVersion("0.0.1");
+		QApplication app(argc, argv);
+	    MainWindow mainWin;
+	    mainWin.show();
+	    return app.exec();
 	}
 
 	// TODO: Validate File
 
-	if (hexDump && !(emulate || disassemble))
+	if (!launchUi)
 	{
-		std::string hex = disassembler::RomParser::hexDump(file);
-		std::cout << hex;
-	}
-	else if(emulate && !(hexDump || disassemble))
-	{
-		std::cout << "Coming Soon" << std::endl;
-	}
-	else if(disassemble && !(hexDump || emulate))
-	{
-		Disassembler d(file);
-		std::cout << d.getText();
-	}
-	else
-	{
-		std::cout << "Please select one, and only one, mode." << std::endl;
-		printUsage();
+		if (hexDump && !(emulate || disassemble))
+		{
+			std::string hex = disassembler::RomParser::hexDump(file);
+			std::cout << hex;
+		}
+		else if(emulate && !(hexDump || disassemble))
+		{
+			std::cout << "Coming Soon" << std::endl;
+		}
+		else if(disassemble && !(hexDump || emulate))
+		{
+			Disassembler d(file);
+			std::cout << d.getText();
+		}
+		else
+		{
+			std::cout << "Please select one, and only one, mode." << std::endl;
+			printUsage();
+		}
 	}
 
 	return 0;
