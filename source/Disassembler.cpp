@@ -12,5 +12,5 @@ Disassembler::~Disassembler()
 
 std::string Disassembler::getText() const
 {
-	return "";
+	return this->engine.getDisassembly();
 }

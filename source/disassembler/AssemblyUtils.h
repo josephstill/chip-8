@@ -26,6 +26,13 @@ private:
 
 	AssemblyUtils(); //No construction
 
+	static std::string assembleData(unsigned char nib1, unsigned char nib2);
+	static std::string assembleNNN(std::string base, unsigned int n, unsigned char nn);
+	static std::string assembleXNN(std::string base, unsigned int x,  unsigned char nn);
+	static std::string assembleVxVy(std::string base, unsigned int x, unsigned int y);
+	static std::string assembleVxVyN(std::string base, unsigned int x, unsigned int y, unsigned int n);
+	static std::string assembleVx(std::string base, unsigned int x);
+
 	/*
 	 * The following are assembly names and bases for operation codes that
 	 * are implemented. X, Y, and N values are not included in these

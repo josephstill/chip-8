@@ -77,6 +77,7 @@ int main(int argc, char**argv)
 	else if(disassemble && !(hexDump || emulate))
 	{
 		Disassembler d(file);
+		std::cout << d.getText();
 	}
 	else
 	{
