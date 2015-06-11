@@ -23,31 +23,57 @@ void DisassemblyEngine::disassemble()
 {
 	this->decode(CHIP_8_START);
 
-	std::map<unsigned int, std::string>::iterator it;
-	for (it = this->engineOutput.begin(); it != this->engineOutput.end(); ++it)
+	for (int x = 0; x < this->buffer.size(); ++x)
 	{
-		this->disassembly << "0x" << std::setw(3) << std::hex << it->first << " " << it->second << std::endl;
+		std::map<unsigned int, std::string>::iterator it = this->engineOutput.find(x + CHIP_8_START);
+		if ( it != this->engineOutput.end())
+		{
+			this->disassembly << "0x" << std::setw(3) << std::hex << it->first << " " << it->second << std::endl;
+			++x; //There is a command here, we can skip the next nibble
+		}
+		else
+		{
+			this->disassembly << std::hex << std::setfill('0');
+			this->disassembly << "0x" << std::setw(3) << std::hex << (x + CHIP_8_START) << " DATA ";
+			this->disassembly << "0x" << std::setw(2) << std::hex << (int)this->buffer[x] << std::endl;
+		}
 	}
 }
 
 void DisassemblyEngine::decode(unsigned int address)
 {
-	while (this->decodeHelper(address) && address < (this->buffer.size() - CHIP_8_START)) address +=2;
+	unsigned int currentAddress = address;
+	while(decodeHelper(currentAddress))
+	{
+		currentAddress+=2;
+	}
 }
 
 bool DisassemblyEngine::decodeHelper(unsigned int address)
 {
-	if (address + 1 >= (this->buffer.size() + CHIP_8_START) ||
-		this->engineOutput.find(address) != this->engineOutput.end())
+	if ((address - CHIP_8_START) + 1 >= this->buffer.size() ||
+		 this->engineOutput.find(address) != this->engineOutput.end())
 	{
 		return false;
 	}
 
+	//TODO we may have decoded address + 1
+
 	unsigned char operation[2];
 	operation[0] = this->buffer[address - CHIP_8_START];
 	operation[1] = this->buffer[(address + 1) - CHIP_8_START];
-	this->engineOutput[address] = AssemblyUtils::decode(operation);
-	return true;
+	AssemblyUtils::DecodeResult result = AssemblyUtils::decode(operation);
+	this->engineOutput[address] = result.command;
+	if (result.nextAddress > 0x00)
+	{
+		//TODO process link
+		this->decode(result.nextAddress);
+	}
+	else if(result.offset > 0x00)
+	{
+		this->decode(address + result.offset);
+	}
+	return !result.commandIsTerminal;
 }
 
 } /* namespace disassembler */

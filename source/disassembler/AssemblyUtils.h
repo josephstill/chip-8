@@ -1,6 +1,7 @@
 #ifndef ASSEMBLYUTILS_H_
 #define ASSEMBLYUTILS_H_
 
+#include <sstream>
 #include <string>
 
 namespace disassembler
@@ -15,12 +16,21 @@ class AssemblyUtils
 
 public:
 
+	struct DecodeResult
+	{
+		std::string command;
+		unsigned int nextAddress;
+		unsigned int offset;
+		bool nextAddressIsLink;
+		bool commandIsTerminal;
+	};
+
 	/**
 	 * Decodes the given byte code into assembly.
 	 * @param operation The byte code to decode.
 	 * @return A string containing the assembly listing.
 	 */
-	static std::string decode(unsigned char* operation);
+	static DecodeResult decode(unsigned char* operation);
 
 private:
 
@@ -32,6 +42,8 @@ private:
 	static std::string assembleVxVy(std::string base, unsigned int x, unsigned int y);
 	static std::string assembleVxVyN(std::string base, unsigned int x, unsigned int y, unsigned int n);
 	static std::string assembleVx(std::string base, unsigned int x);
+
+	static unsigned int constructAddress(unsigned int nibble2, unsigned int nibble1, unsigned int nibble0);
 
 	/*
 	 * The following are assembly names and bases for operation codes that

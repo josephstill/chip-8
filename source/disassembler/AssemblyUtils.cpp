@@ -1,5 +1,4 @@
 #include "AssemblyUtils.h"
-#include <sstream>
 #include <iostream>
 #include <iomanip>
 
@@ -38,11 +37,11 @@ const std::string   AssemblyUtils::ADD_BY_REG              		   = "ADD Vx, Vy";
 const unsigned char AssemblyUtils::ADD_BY_REG_CODE[2]         	   = {0x80, 0x04};
 const std::string   AssemblyUtils::SUB_BY_REG              		   = "SUB Vx, Vy";
 const unsigned char AssemblyUtils::SUB_BY_REG_CODE[2]         	   = {0x80, 0x05};
-const std::string   AssemblyUtils::SHIFT_RIGHT             		   = "SHR Vx,"; //TODO use of Vy?
+const std::string   AssemblyUtils::SHIFT_RIGHT             		   = "SHR Vx,";
 const unsigned char AssemblyUtils::SHIFT_RIGHT_CODE[2]        	   = {0x80, 0x06};
 const std::string   AssemblyUtils::MINUS_EQUAL             		   = "SUBN Vx, Vy";
 const unsigned char AssemblyUtils::MINUS_EQUAL_CODE[2]        	   = {0x80, 0x07};
-const std::string   AssemblyUtils::SHIFT_LEFT              		   = "SHL Vx,"; //TODO use of Vy?
+const std::string   AssemblyUtils::SHIFT_LEFT              		   = "SHL Vx,";
 const unsigned char AssemblyUtils::SHIFT_LEFT_CODE[2]         	   = {0x80, 0x0E};
 const std::string   AssemblyUtils::SKIP_REG_NOT_EQUAL      		   = "SNE Vx, Vy";
 const unsigned char AssemblyUtils::SKIP_REG_NOT_EQUAL_CODE[2] 	   = {0x90, 0x00};
@@ -77,15 +76,18 @@ const unsigned char AssemblyUtils::STORE_REGS_CODE[2]              = {0xF0, 0x55
 const std::string   AssemblyUtils::READ_REGS                       = "LD Vx, [I]";
 const unsigned char AssemblyUtils::READ_REGS_CODE[2]               = {0xF0, 0x65};
 
-std::string AssemblyUtils::decode(unsigned char* operation)
+AssemblyUtils::DecodeResult AssemblyUtils::decode(unsigned char* operation)
 {
 	unsigned int opNibl3 = (unsigned int)(operation[0] >> 4);
 	unsigned int opNibl2 = (unsigned int) (operation[0] & 0x0F);
 	unsigned int opNibl1 = (unsigned int)(operation[1] >> 4);
 	unsigned int opNibl0 = (unsigned int) (operation[1] & 0x0F);
 
-
+	unsigned int returnAddress = 0x000; //Return addresses must be greater than 0x200 so, 0 will be a negative flag.
     std::string retVal = assembleData(operation[0], operation[1]);
+    unsigned int returnOffset = 0;
+    bool isLabel = false;
+    bool terminal = false;
 
 	switch (opNibl3)
 	{
@@ -97,29 +99,38 @@ std::string AssemblyUtils::decode(unsigned char* operation)
 			break;
 		case 0xee:
 			retVal = RET_NAME;
+			terminal = true;
+			break;
+		default:
+			terminal = true;
 			break;
 		}
 		break;
 	case 0x1:
 		{
-			//TODO Label
 			retVal = assembleNNN(JUMP_TO_ADDR, opNibl2, operation[1]);
+			returnAddress = constructAddress(opNibl2, opNibl1, opNibl0);
+			isLabel = true;
+			terminal = true;
 		}
 		break;
 	case 0x2:
 		{
-			//TODO Label
 			retVal = assembleNNN(CALL_SUBROUTINE, opNibl2, operation[1]);
+			returnAddress = constructAddress(opNibl2, opNibl1, opNibl0);
+			isLabel = true;
 		}
 		break;
 	case 0x3:
 		{
 			retVal = assembleXNN(SKIP_IF_EQUAL, opNibl2, operation[1]);
+			returnOffset = 4;
 		}
 		break;
 	case 0x4:
 		{
 			retVal = assembleXNN(SKIP_IF_NOT_EQUAL, opNibl2, operation[1]);
+			returnOffset = 4;
 		}
 		break;
 	case 0x5:
@@ -127,6 +138,7 @@ std::string AssemblyUtils::decode(unsigned char* operation)
 			if (opNibl0 == 0x0)
 			{
 				retVal = assembleVxVy(SKIP_REG_EQUAL, opNibl2, opNibl1);
+				returnOffset = 4;
 			}
 		}
 		break;
@@ -171,17 +183,22 @@ std::string AssemblyUtils::decode(unsigned char* operation)
 			case 0xE:
 				retVal = assembleVx(SHIFT_LEFT, opNibl2);
 				break;
+			default:
+				terminal = true;
+				break;
 			}
 		}
 		break;
 	case 0x9:
 		retVal = assembleVxVy(SKIP_REG_NOT_EQUAL, opNibl2, opNibl1);
+		returnOffset = 4;
 		break;
 	case 0xA:
 		retVal = assembleNNN(LOAD_I, opNibl2, operation[1]);
 		break;
 	case 0xB:
 		retVal = assembleNNN(JUMP_TO_ADDR_OFFSET, opNibl2, operation[1]);
+		terminal = true;
 		break;
 	case 0xC:
 		retVal = assembleXNN(RANDOM, opNibl2, operation[1]);
@@ -195,10 +212,14 @@ std::string AssemblyUtils::decode(unsigned char* operation)
 			{
 			case 0x9E:
 				retVal = assembleVx(SKIP_KEYPRESS_EQUAL, opNibl2);
+				returnOffset = 4;
 				break;
 			case 0xA1:
 				retVal = assembleVx(SKIP_KEYPRESS_NOT_EQUAL, opNibl2);
+				returnOffset = 4;
 				break;
+			default:
+				terminal = true;
 			}
 		}
 		break;
@@ -233,18 +254,31 @@ std::string AssemblyUtils::decode(unsigned char* operation)
 			case 0x65:
 				retVal = assembleVx(READ_REGS, opNibl2);
 				break;
+			default:
+				terminal = true;
+				break;
 			}
 		}
 		break;
+	default:
+		terminal = true;
+		break;
 	}
 
-	return retVal;
+	DecodeResult result;
+	result.command = retVal;
+	result.nextAddress = returnAddress;
+	result.offset = returnOffset;
+	result.nextAddressIsLink = isLabel;
+	result.commandIsTerminal = terminal;
+	return result;
 }
 
 std::string AssemblyUtils::assembleData(unsigned char nib1, unsigned char nib2)
 {
 	std::stringstream ss;
 	ss << std::hex << std::setfill('0');
+	ss << "0x";
 	ss << std::setw(2) << std::hex << (int)nib1;
 	ss << std::setw(2) << std::hex << (int)nib2;
 	return ss.str();
@@ -313,6 +347,12 @@ std::string AssemblyUtils::assembleVx(std::string base, unsigned int x)
 	ss << std::hex << std::setfill('0');
 	ss << std::setw(1) << std::hex << (int)x;
 	retVal.replace(retVal.find('x'), 1, ss.str());
+	return retVal;
+}
+
+unsigned int AssemblyUtils::constructAddress(unsigned int nibble2, unsigned int nibble1, unsigned int nibble0)
+{
+	unsigned int retVal = (nibble2 << 8) | (nibble1 << 4) | (nibble0);
 	return retVal;
 }
 
