@@ -8,7 +8,7 @@
     <h2>Contents</h2>
   </header>
   <ul>
-    <li><a href="Dependencies">Dependencies</a></li>
+    <li><a href="#Dependencies">Dependencies</a></li>
   </ul>
   <br>
   <header>
