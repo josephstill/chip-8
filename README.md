@@ -9,6 +9,8 @@
   </header>
   <ul>
     <li><a href="#Dependencies">Dependencies</a></li>
+    <li><a href="#Development">Development</a></li>
+    <li><a href="#Building">Building</a></li>
   </ul>
   <br>
   <header>
@@ -21,7 +23,7 @@
     </ul>
   <br>
   <header>
-    <h2>Development Environment</h2>
+    <a name="Development"><h2>Development Environment</h2></a>
   </header>
     <p>The following is a profile of my development environment</p>
     <ul style="list-style-type:disc">
@@ -34,7 +36,7 @@
     </ul>
     <br>
   <header>
-    <h2>Building</h2>
+    <a name="Building"><h2>Building</h2></a>
   </header>
   <p>Once the dependencies are installed and the source is downloaded, the build.sh script in the root directory of the project tree should do the work for you. It will change to the build subdirectory and run CMake for you. The output will be a binary called chip-8 and will be located in the build directory along side other build artifacts.</p>
   <br>
