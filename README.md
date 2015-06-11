@@ -52,6 +52,20 @@
     <a name="Features"><h2>4. Features</h2></a>
     <p>The following is information regarding the features of the emulator and disassembler.</p>
   </header>
+  <p>A help function is provided for the command line tool and is activated using the -h flag.</p>
+  <pre>
+    <samp>
+      joseph@Joseph-MacBookPro$ ./chip-8 -h
+      Usage: 
+      chip-8 -hxde -f <path to file>
+      -f    Set the path to the ROM file
+      -h    Display help
+      Mode: (Choose one and only one)
+      -x    Show hex dump
+      -d    Disassemble the ROM
+      -e    Run the ROM on emulator
+    </samp>
+  </pre>
   <header>
     <a name="Hex"><h3>Hex Dumps</h3></a>
   </header>

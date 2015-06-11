@@ -48,7 +48,7 @@ void DisassemblyEngine::disassemble()
 		}
 		else
 		{
-			this->disassembly << "0x" << std::setw(2) << std::hex << (int)this->buffer[x] << std::endl;
+			this->disassembly << "DATA 0x" << std::setw(2) << std::hex << (int)this->buffer[x] << std::endl;
 		}
 	}
 }
