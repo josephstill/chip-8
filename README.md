@@ -39,7 +39,21 @@
   <header>
     <h3>Hex Dumps</h3>
   </header>
-  <p>Information will be added as the feature develops</p>
+  <p>Running the hex dump feature will display the bytes found inside the ROM with address offsets for a reference point. Currently this feature is only available in the command line tool; however, if there is time, a GUI will be added for this feature. The purpose for including this extra feature was that I found it useful when investigating bugs in file parsing. The hex dump feature is activated wiht the -x flag and requires that -f be specified with a file path. The ouput looks like this:</p>
+  <samp>
+    joseph@Joseph-MacBookPro:~/Documents/code/chip-8/build$ ./chip-8 -x -f ../roms/Fishie.ch8 <br>
+    00000000 00e0 a220 6208 60f8 7008 6110 4020 120e<br> 
+    00000010 d108 f21e 7108 4130 1208 1210 0000 0000<br> 
+    00000020 0000 0000 0018 3c3c 0000 0000 0000 0000<br> 
+    00000030 0000 0000 0000 0000 0000 0000 0000 0000<br> 
+    00000040 3e3f 3f3b 3938 3838 0000 80c1 e7ff 7e3c<br> 
+    00000050 001f fff9 c080 0303 0080 e0f0 7838 1c1c<br> 
+    00000060 3838 393b 3f3f 3e3c 78fc fecf 8703 0100<br> 
+    00000070 0000 0000 80e3 ff7f 1c38 3870 f0e0 c000<br> 
+    00000080 3c18 0000 0000 0000 0000 0000 0000 0000<br> 
+    00000090 0000 0000 0000 0000 0000 0000 0000 0000<br> 
+  </samp>
+  <p>The hex dump was the first feature that I implemented as I was trying to become more familiar with the opcodes. Upon inspection of the hex dump, there is plenty of non opcode grouping of bytes. Another interesting thing that stands out, is the value at <code>0x000e</code>. Remembering that space up to <code>0x0200</code> is reserved for the system, this line would be in memory at <code>0x020e</code>. The command <code>0x120e</code> is a jump to <code>0x020e</code> which is a jump to itself.</p>
   <header>
     <h3>Disassembly</h3>  
   </header>
