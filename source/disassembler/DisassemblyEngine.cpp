@@ -25,16 +25,29 @@ void DisassemblyEngine::disassemble()
 
 	for (int x = 0; x < this->buffer.size(); ++x)
 	{
+		// Display the address
+		this->disassembly << std::hex << std::setfill('0');
+		this->disassembly << "0x" << std::setw(3) << std::hex << (x + CHIP_8_START);
+
+		// Show a label if there is one
+		std::map<unsigned int, std::string>::iterator linkIt = this->addressOutput.find(x + CHIP_8_START);
+		if (linkIt != this->addressOutput.end())
+		{
+			this->disassembly << " " << linkIt->second << " ";
+		}
+		else
+		{
+			this->disassembly << "          "; // For looks
+		}
+
 		std::map<unsigned int, std::string>::iterator it = this->engineOutput.find(x + CHIP_8_START);
 		if ( it != this->engineOutput.end())
 		{
-			this->disassembly << "0x" << std::setw(3) << std::hex << it->first << " " << it->second << std::endl;
+			this->disassembly << it->second << std::endl;
 			++x; //There is a command here, we can skip the next nibble
 		}
 		else
 		{
-			this->disassembly << std::hex << std::setfill('0');
-			this->disassembly << "0x" << std::setw(3) << std::hex << (x + CHIP_8_START) << " DATA ";
 			this->disassembly << "0x" << std::setw(2) << std::hex << (int)this->buffer[x] << std::endl;
 		}
 	}
@@ -57,8 +70,6 @@ bool DisassemblyEngine::decodeHelper(unsigned int address)
 		return false;
 	}
 
-	//TODO we may have decoded address + 1
-
 	unsigned char operation[2];
 	operation[0] = this->buffer[address - CHIP_8_START];
 	operation[1] = this->buffer[(address + 1) - CHIP_8_START];
@@ -66,7 +77,10 @@ bool DisassemblyEngine::decodeHelper(unsigned int address)
 	this->engineOutput[address] = result.command;
 	if (result.nextAddress > 0x00)
 	{
-		//TODO process link
+		if (result.nextAddressIsLink)
+		{
+			this->addressOutput[result.nextAddress] = result.linkName;
+		}
 		this->decode(result.nextAddress);
 	}
 	else if(result.offset > 0x00)

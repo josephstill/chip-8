@@ -44,6 +44,7 @@ private:
 	void decode(unsigned int address);
 	bool decodeHelper(unsigned int address);
 
+	std::map<unsigned int, std::string>  addressOutput;
 	std::vector<unsigned char>           buffer;
 	std::stringstream                    disassembly;
 	std::map<unsigned int, std::string>  engineOutput;

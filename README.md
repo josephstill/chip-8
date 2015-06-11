@@ -23,7 +23,7 @@
       <li>CMake 2.8.12.2</li>
       <li>Eclipse 3.8.1</li>
       <li>GCC 4.8.2</li>
-      <li>GDB 7.7.1</li>
+      <li>gdb 7.7.1</li>
       <li>git 1.9.1</li>
     </ul>
     <br>
@@ -51,7 +51,7 @@
   <br>
   <header>
     <h2>Notes and Lessons Learned</h2>
-    <p>From looking through some of the sample ROMs, it looks like the jumps may not always fall on an even number instruction. There is an example of this in Space Invaders, which starts with a jump to 0x225. It also appears that there is non instruction data inside some of the ROMs which will make linear parsing of instructions inaccurate.</p>
+    <p>From looking through some of the sample ROMs, it looks like the jumps may not always fall on an even number instruction. There is an example of this in Space Invaders, which starts with a jump to 0x225. It also appears that there is non instruction data inside some of the ROMs which will make linear parsing of instructions inaccurate. My search led me to a process called recursive decent which involves augmenting a linear disassembly by following links and branches. I will treat any left over information as data and have updated the disassembly output display it. Since I have seen some jumps to uneven address and addresses must be of even size, I am displaying the data in nibble intervals to ensure all of it is displayed.</p>
   </header>
   <br>
   <header>

@@ -85,7 +85,8 @@ AssemblyUtils::DecodeResult AssemblyUtils::decode(unsigned char* operation)
 
 	unsigned int returnAddress = 0x000; //Return addresses must be greater than 0x200 so, 0 will be a negative flag.
     std::string retVal = assembleData(operation[0], operation[1]);
-    unsigned int returnOffset = 0;
+    unsigned int returnOffset = 0; //Return offset of 0 means no offset will be accounted for.
+    std::string label;
     bool isLabel = false;
     bool terminal = false;
 
@@ -108,17 +109,19 @@ AssemblyUtils::DecodeResult AssemblyUtils::decode(unsigned char* operation)
 		break;
 	case 0x1:
 		{
-			retVal = assembleNNN(JUMP_TO_ADDR, opNibl2, operation[1]);
 			returnAddress = constructAddress(opNibl2, opNibl1, opNibl0);
+			label = constructLinkName(opNibl2, opNibl1, opNibl0);
 			isLabel = true;
 			terminal = true;
+			retVal = assembleWithLabel(JUMP_TO_ADDR, label);
 		}
 		break;
 	case 0x2:
 		{
-			retVal = assembleNNN(CALL_SUBROUTINE, opNibl2, operation[1]);
 			returnAddress = constructAddress(opNibl2, opNibl1, opNibl0);
+			label = constructLinkName(opNibl2, opNibl1, opNibl0);
 			isLabel = true;
+			retVal = assembleWithLabel(JUMP_TO_ADDR, label);
 		}
 		break;
 	case 0x3:
@@ -268,6 +271,7 @@ AssemblyUtils::DecodeResult AssemblyUtils::decode(unsigned char* operation)
 	DecodeResult result;
 	result.command = retVal;
 	result.nextAddress = returnAddress;
+	result.linkName = label;
 	result.offset = returnOffset;
 	result.nextAddressIsLink = isLabel;
 	result.commandIsTerminal = terminal;
@@ -350,10 +354,25 @@ std::string AssemblyUtils::assembleVx(std::string base, unsigned int x)
 	return retVal;
 }
 
+std::string AssemblyUtils::assembleWithLabel(std::string base, std::string label)
+{
+	std::stringstream retVal;
+	retVal << base << " " << label;
+	return retVal.str();
+}
+
 unsigned int AssemblyUtils::constructAddress(unsigned int nibble2, unsigned int nibble1, unsigned int nibble0)
 {
 	unsigned int retVal = (nibble2 << 8) | (nibble1 << 4) | (nibble0);
 	return retVal;
+}
+
+std::string  AssemblyUtils::constructLinkName(unsigned int nibble2, unsigned int nibble1, unsigned int nibble0)
+{
+	std::stringstream retVal;
+	retVal << std::hex << std::setfill('0');
+	retVal << "link_" << std::setw(3) << std::hex << constructAddress(nibble2, nibble1, nibble0);
+	return retVal.str();
 }
 
 } /* namespace disassembler */

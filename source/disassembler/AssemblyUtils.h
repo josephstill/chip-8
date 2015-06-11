@@ -19,6 +19,7 @@ public:
 	struct DecodeResult
 	{
 		std::string command;
+		std::string linkName;
 		unsigned int nextAddress;
 		unsigned int offset;
 		bool nextAddressIsLink;
@@ -42,8 +43,10 @@ private:
 	static std::string assembleVxVy(std::string base, unsigned int x, unsigned int y);
 	static std::string assembleVxVyN(std::string base, unsigned int x, unsigned int y, unsigned int n);
 	static std::string assembleVx(std::string base, unsigned int x);
+	static std::string assembleWithLabel(std::string base, std::string label);
 
 	static unsigned int constructAddress(unsigned int nibble2, unsigned int nibble1, unsigned int nibble0);
+	static std::string  constructLinkName(unsigned int nibble2, unsigned int nibble1, unsigned int nibble0);
 
 	/*
 	 * The following are assembly names and bases for operation codes that
