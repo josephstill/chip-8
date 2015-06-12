@@ -1,6 +1,9 @@
 #ifndef MAINWINDOW_H_
 #define MAINWINDOW_H_
 
+#include "DisassemblyWindow.h"
+#include "HexDumpWindow.h"
+
 #include <QWidget>
 #include <QLineEdit>
 #include <QPushButton>
@@ -27,14 +30,19 @@ private slots:
 	void launchDisassembler();
 	void launchHexDump();
 	void launchBrowser();
+	void disassemblerClosed();
+	void hexWindowClosed();
 
 private:
 
-    QLineEdit*    filePathEditor;
-    QPushButton*  browseButton;
-    QPushButton*  emulateButton;
-    QPushButton*  disassembleButton;
-    QPushButton*  hexDumpButton;
+    QLineEdit*         filePathEditor;
+    QPushButton*       browseButton;
+    QPushButton*       emulateButton;
+    QPushButton*       disassembleButton;
+    QPushButton*       hexDumpButton;
+
+    DisassemblyWindow* disassemblyWindow; //TODO this should be a shared pointer
+    HexDumpWindow*     hexDumpWindow;
 };
 
 

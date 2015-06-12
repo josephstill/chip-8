@@ -5,6 +5,8 @@
 #include <QLabel>
 #include <QFile>
 
+#include <iostream>
+
 MainWindow::MainWindow()
 {
 	this->filePathEditor    = new QLineEdit();
@@ -53,12 +55,40 @@ void MainWindow::launchEmulator()
 
 void MainWindow::launchDisassembler()
 {
+	QFile rom(this->filePathEditor->text());
 
+	if (rom.exists())
+	{
+		this->disassemblyWindow = new DisassemblyWindow(this->filePathEditor->text());
+		this->disassemblyWindow->show();
+		this->disassembleButton->setEnabled(false);
+
+		connect(this->disassemblyWindow, SIGNAL(windowClosing()),
+				this, SLOT(disassemblerClosed()));
+	}
+	else
+	{
+		//TODO add warning window
+	}
 }
 
 void MainWindow::launchHexDump()
 {
+	QFile rom(this->filePathEditor->text());
 
+	if (rom.exists())
+	{
+		this->hexDumpWindow = new HexDumpWindow(this->filePathEditor->text());
+		this->hexDumpWindow->show();
+		this->hexDumpButton->setEnabled(false);
+
+		connect(this->hexDumpWindow, SIGNAL(windowClosing()),
+				this, SLOT(hexWindowClosed()));
+	}
+	else
+	{
+		//TODO add warning window
+	}
 }
 
 void MainWindow::launchBrowser()
@@ -72,4 +102,20 @@ void MainWindow::launchBrowser()
 	{
 		this->filePathEditor->setText(fileName);
 	}
+}
+
+
+void MainWindow::disassemblerClosed()
+{
+	this->disassembleButton->setEnabled(true);
+	disconnect(this->disassemblyWindow, SIGNAL(windowClosing()),
+			   this, SLOT(disassemblerClosed()));
+}
+
+
+void MainWindow::hexWindowClosed()
+{
+	this->hexDumpButton->setEnabled(true);
+	disconnect(this->hexDumpWindow, SIGNAL(windowClosing()),
+			   this, SLOT(hexWindowClosed()));
 }
