@@ -65,11 +65,12 @@
       -d    Disassemble the ROM
       -e    Run the ROM on emulator
     </samp>
+  <p>Running the program without the file flag set will cause the UI to launch.</p>
   </pre>
   <header>
     <a name="Hex"><h3>Hex Dumps</h3></a>
   </header>
-  <p>Running the hex dump feature will display the bytes found inside the ROM with address offsets for a reference point. Currently this feature is only available in the command line tool; however, if there is time, a GUI will be added for this feature. The purpose for including this extra feature was that I found it useful when investigating bugs in file parsing. The hex dump feature is activated with the -x flag and requires that -f be specified with a file path. The output looks like this:</p>
+  <p>Running the hex dump feature will display the bytes found inside the ROM with address offsets for a reference point. The purpose for including this extra feature was that I found it useful when investigating bugs in file parsing. The hex dump feature is activated with the -x flag and requires that -f be specified with a file path. The output looks like this:</p>
   <pre>
     <samp>
       joseph@Joseph-MacBookPro$ ./chip-8 -x -f ../roms/Fishie.ch8
@@ -90,7 +91,7 @@
   <header>
     <a name="Disassembly"><h3>Disassembly</h3></a>  
   </header>
-  <p>Running the disassembly tool will provide you with assembly listings for the opcodes found withing the ROM file. Currently this feature is only available in the command line tool; however, it will be added to the GUI once it is implemented. The format of this output is linear from <code>0x0200</code> until the end of the program data. For each opcode, the data section will be parsed in two byte increments; However, there can be one byte sections of data in the ROM, meaning that it is not a requirement that an opcode start at an even offset within the file. Thus, raw data will be parsed in one byte increments. For the command line tool, the disassembly feature is activated using the -d flag and requires that -f be specified with a file path. The output looks like this:</p>
+  <p>Running the disassembly tool will provide you with assembly listings for the opcodes found withing the ROM file. The format of this output is linear from <code>0x0200</code> until the end of the program data. For each opcode, the data section will be parsed in two byte increments; However, there can be one byte sections of data in the ROM, meaning that it is not a requirement that an opcode start at an even offset within the file. Thus, raw data will be parsed in one byte increments. For the command line tool, the disassembly feature is activated using the -d flag and requires that -f be specified with a file path. The output looks like this:</p>
   <pre>
     <samp>
       joseph@Joseph-MacBookPro$ ./chip-8 -d -f ../roms/Fishie.ch8 
