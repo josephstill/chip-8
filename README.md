@@ -26,7 +26,7 @@
   </header>
     <p>The following is a list of libraries that you will need to build and run the project.</p>
     <ul style="list-style-type:disc">
-      <li>CMake 2.6 or Later</li>
+      <li>CMake 2.6</li>
       <li>Qt 4</li>
     </ul>
   <br>
@@ -65,8 +65,8 @@
       -d    Disassemble the ROM
       -e    Run the ROM on emulator
     </samp>
+  </pre>  
   <p>Running the program without the file flag set will cause the UI to launch.</p>
-  </pre>
   <header>
     <a name="Hex"><h3>Hex Dumps</h3></a>
   </header>
