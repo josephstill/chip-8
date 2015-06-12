@@ -13,6 +13,7 @@ SET(SRC_FILES
     MainWindow.cpp
     DisassemblyWindow.cpp
     HexDumpWindow.cpp
+    Emulator.cpp
     main.cpp)
 
 SET(HEADER_FILES
@@ -27,7 +28,8 @@ SET(QT_WRAP_HEADERS
     ${QT_WRAP_HEADERS}
     MainWindow.h
     DisassemblyWindow.h
-    HexDumpWindow.h)    
+    HexDumpWindow.h
+    Emulator.h)
 QT4_WRAP_CPP(MOCSrcs ${QT_WRAP_HEADERS})
 
 ADD_DEFINITIONS(-std=c++11)

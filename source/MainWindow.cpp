@@ -6,6 +6,7 @@
 #include <QFile>
 
 #include <iostream>
+#include "Emulator.h"
 
 MainWindow::MainWindow()
 {
@@ -50,7 +51,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::launchEmulator()
 {
-
+    Emulator e(this->filePathEditor->text());
 }
 
 void MainWindow::launchDisassembler()
