@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <deque>
+#include <map>
 
 namespace emulator
 {
@@ -12,7 +13,6 @@ namespace emulator
  */
 class CPU
 {
-    Q_OBJECT
 
 public:
 

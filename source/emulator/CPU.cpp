@@ -5,7 +5,7 @@ namespace emulator
 
 CPU::CPU(std::vector<unsigned char> program)
 {
-    this->CPUState.PC = 0x200;
+    //this->CPUState.PC = 0x200;
     this->loadCharacters();
     this->loadBuffer(program);
     this->loadScreen();
