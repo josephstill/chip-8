@@ -3,8 +3,9 @@
 
 #include <QObject>
 #include <QString>
+#include <QSharedPointer>
 
-#include "emulator/Memory.h"
+#include "emulator/Processor.h"
 
 class Emulator: public QObject
 {
@@ -23,8 +24,10 @@ public:
      */
     ~Emulator();
 
+    QSharedPointer<emulator::Processor>& getProcessor() { return this->processor; }
+
 private:
-    emulator::Memory memory;
+    QSharedPointer<emulator::Processor> processor;
 };
 
 #endif // EMULATOR_H

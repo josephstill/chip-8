@@ -6,6 +6,7 @@
 #include <QStack>
 #include <iostream>
 #include <vector> //Converting from STL, so this is necessary
+#include <string>
 
 namespace emulator
 {
@@ -23,8 +24,9 @@ public:
      * Constructs the CPU object. The CPU will be loaded with the
      * provided and initialized so that it can run.
      * @param program The program to load into the CPU
+     * @param parent The parent of this object
      */
-    Memory(std::vector<unsigned char> program);
+    Memory(std::vector<unsigned char> program, QObject *parent = 0);
 
     /**
      * Destructor
@@ -44,7 +46,7 @@ public:
       * @param size The number of bytes to return
       * @return data from memory
       */
-     unsigned char* getFromMemory(unsigned int address, unsigned int size);
+     unsigned char* getFromMemory(unsigned int addmemoryress, unsigned int size);
 
      /**
       * Gets the value from the register given.
@@ -73,6 +75,15 @@ public:
       */
      void setRegisterVal(unsigned int reg, unsigned char data);
 
+     /**
+      *Creates a string representation of this object;
+      * @return a string represenataion of this object.
+      */
+     std::string toString() const;
+
+     //This is for core dumps
+     friend std::ostream& operator<<(std::ostream& output, const Memory& memory);
+
 signals:
 
     /**
@@ -91,9 +102,6 @@ signals:
      * @param data The data that has changed
      */
     void registerUpdated(unsigned int reg, unsigned char data);
-
-    //This is for core dumps
-    friend std::ostream& operator<<(std::ostream& output, const Memory& memory);
 
 private:
     void loadBuffer(std::vector<unsigned char> program);

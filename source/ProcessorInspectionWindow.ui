@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ProcessorInspectionWindow</class>
+ <widget class="QWidget" name="ProcessorInspectionWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>536</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_6">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>State</string>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QTableWidget" name="memoryMap">
+          <property name="rowCount">
+           <number>5</number>
+          </property>
+          <property name="columnCount">
+           <number>8</number>
+          </property>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <column/>
+          <column/>
+          <column/>
+          <column/>
+          <column/>
+          <column/>
+          <column/>
+          <column/>
+          <item row="0" column="0">
+           <property name="text">
+            <string>V0</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+          <item row="0" column="2">
+           <property name="text">
+            <string>V1</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+          <item row="0" column="4">
+           <property name="text">
+            <string>V2</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+          <item row="0" column="6">
+           <property name="text">
+            <string>V3</string>
+           </property>
+          </item>
+          <item row="1" column="0">
+           <property name="text">
+            <string>V4</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+          <item row="1" column="2">
+           <property name="text">
+            <string>V5</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+          <item row="1" column="4">
+           <property name="text">
+            <string>V6</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+          <item row="1" column="6">
+           <property name="text">
+            <string>V7</string>
+           </property>
+          </item>
+          <item row="2" column="0">
+           <property name="text">
+            <string>V8</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+          <item row="2" column="2">
+           <property name="text">
+            <string>V9</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+          <item row="2" column="4">
+           <property name="text">
+            <string>VA</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+          <item row="2" column="6">
+           <property name="text">
+            <string>VB</string>
+           </property>
+          </item>
+          <item row="3" column="0">
+           <property name="text">
+            <string>VC</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+          <item row="3" column="2">
+           <property name="text">
+            <string>VD</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+          <item row="3" column="4">
+           <property name="text">
+            <string>VE</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+          <item row="3" column="6">
+           <property name="text">
+            <string>VF</string>
+           </property>
+          </item>
+          <item row="4" column="0">
+           <property name="text">
+            <string>I</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+          <item row="4" column="2">
+           <property name="text">
+            <string>PC</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="title">
+        <string>Core Dump</string>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QTextBrowser" name="coreDump"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="frame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QPushButton" name="playButton">
+            <property name="text">
+             <string>Play</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pauseButton">
+            <property name="text">
+             <string>Pause</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="stepButton">
+            <property name="text">
+             <string>Step</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="dumpButton">
+            <property name="text">
+             <string>Core Dump</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -6,7 +6,6 @@
 #include <QFile>
 
 #include <iostream>
-#include "Emulator.h"
 
 MainWindow::MainWindow()
 {
@@ -51,7 +50,14 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::launchEmulator()
 {
-    Emulator e(this->filePathEditor->text());
+    QFile rom(this->filePathEditor->text());
+
+    if (rom.exists())
+    {
+        e = new Emulator(this->filePathEditor->text());
+        this->ProcessorInspection = new ProcessorInspectionWindow(e->getProcessor());
+        this->ProcessorInspection->show();
+    }
 }
 
 void MainWindow::launchDisassembler()

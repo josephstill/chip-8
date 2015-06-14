@@ -3,9 +3,9 @@
 #include "disassembler/RomParser.h"
 #include <iostream>
 
-Emulator::Emulator(QString filePath) : memory(disassembler::RomParser::loadBuffer(filePath.toStdString()))
+Emulator::Emulator(QString filePath) : processor(new emulator::Processor(disassembler::RomParser::loadBuffer(filePath.toStdString())))
 {
-    std::cout << this->memory << std::endl;
+
 }
 
 Emulator::~Emulator()

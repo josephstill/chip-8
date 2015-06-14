@@ -1,5 +1,7 @@
 #include "Memory.h"
 #include <iomanip>
+#include <sstream>
+#include <iostream>
 
 #define PROGRAM_START 0x200
 #define MEMORY_SIZE   0x1000
@@ -25,10 +27,11 @@ const static unsigned char CHARACTERS[16][5]=     {{0xF0,0x90,0x90,0x90,0xF0},
 namespace emulator
 {
 
-Memory::Memory(std::vector<unsigned char> program) : PC(PROGRAM_START),
-                                                     V(16, 0),
-                                                     I(0),
-                                                     memory(MEMORY_SIZE, 0)
+Memory::Memory(std::vector<unsigned char> program, QObject *parent) : QObject(parent),
+                                                                      PC(PROGRAM_START),
+                                                                      V(16, 0),
+                                                                      I(0),
+                                                                      memory(MEMORY_SIZE, 0)
 {
     this->loadBuffer(program);
     this->loadCharacters();
@@ -37,7 +40,7 @@ Memory::Memory(std::vector<unsigned char> program) : PC(PROGRAM_START),
 
 Memory::~Memory()
 {
-
+    std::cout << "Deleting Memory" << std::endl;
 }
 
 void Memory::clearScreen()
@@ -48,7 +51,7 @@ void Memory::clearScreen()
 
 unsigned char* Memory::getFromMemory(unsigned int address, unsigned int size)
 {
-    unsigned char* data = new unsigned char[size]; //TODO throw exception
+    unsigned char* data = new unsigned char[size]; //TODO throw exception - segmentation fault
     for (int x = 0; x < size && address + size < this->memory.size(); ++x)
     {
        data[x] = this->memory[address + size];
@@ -102,29 +105,36 @@ void Memory::setRegisterVal(unsigned int reg, unsigned char data)
     }
 }
 
+std::string Memory::toString() const
+{
+    std::stringstream output;
+    output << std::hex << std::setfill('0');
+    output << "Begin Core Dump: " << std::endl;
+    output << std::endl;
+    output << "Registers: " << std:: endl;
+    for (int reg = 0; reg < 16; ++reg)
+    {
+        if (reg > 0 && reg % 4 == 0 ) output << std::endl;
+        output << "V" << std::setw(1) << std::hex << reg << " " << std::setw(2) << std::hex << (int)this->V[reg] << " ";
+    }
+    output << std::endl << std::endl;
+    output << "Program Counter:  " << std::setw(3) << std::hex << this->PC << std::endl;
+    output << "Address Register: " << std::setw(3) << std::hex << this->I << std::endl;
+    output << std::endl;
+    output << "Memory Contents: " << std::endl;
+    for (int address = 0; address < this->memory.size(); ++address)
+    {
+        if (address %2  == 0) output << ' ';
+        if (address %16 == 0) output << std::endl << std::setw(4) << std::hex << address << " ";
+        output << std::setw(2) << std::hex << (int) this->memory[address];
+    }
+    output << std::endl;
+    return output.str();
+}
+
  std::ostream& operator<<(std::ostream& output, const Memory& memory)
  {
-     output << std::hex << std::setfill('0');
-     output << "Begin Core Dump: " << std::endl;
-     output << std::endl;
-     output << "Registers: " << std:: endl;
-     for (int reg = 0; reg < 16; ++reg)
-     {
-         if (reg > 0 && reg % 4 == 0 ) output << std::endl;
-         output << "V" << std::setw(1) << std::hex << reg << " " << std::setw(2) << std::hex << (int)memory.V[reg] << " ";
-     }
-     output << std::endl << std::endl;
-     output << "Program Counter:  " << std::setw(3) << std::hex << memory.PC << std::endl;
-     output << "Address Register: " << std::setw(3) << std::hex << memory.I << std::endl;
-     output << std::endl;
-     output << "Memory Contents: " << std::endl;
-     for (int address = 0; address < memory.memory.size(); ++address)
-     {
-         if (address %2  == 0) output << ' ';
-         if (address %16 == 0) output << std::endl << std::setw(4) << std::hex << address << " ";
-         output << std::setw(2) << std::hex << (int) memory.memory[address];
-     }
-     output << std::endl;
+     output << memory.toString();
      return output;
  }
 

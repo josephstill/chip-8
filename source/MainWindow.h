@@ -3,13 +3,14 @@
 
 #include "DisassemblyWindow.h"
 #include "HexDumpWindow.h"
+#include "ProcessorInspectionWindow.h"
 
 #include <QWidget>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QFrame>
 #include <QFileDialog>
-
+#include "Emulator.h"
 class MainWindow : public QWidget
 {
     Q_OBJECT
@@ -41,8 +42,10 @@ private:
     QPushButton*       disassembleButton;
     QPushButton*       hexDumpButton;
 
-    DisassemblyWindow* disassemblyWindow; //TODO this should be a shared pointer
-    HexDumpWindow*     hexDumpWindow;
+    Emulator*                  e;
+    DisassemblyWindow*         disassemblyWindow; //TODO this should be a shared pointer
+    HexDumpWindow*             hexDumpWindow;
+    ProcessorInspectionWindow* ProcessorInspection;
 };
 
 
