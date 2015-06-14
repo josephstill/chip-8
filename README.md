@@ -127,7 +127,7 @@
   <header>
     <a name="Emulation"><h3>Emulation</h3></a>
   </header>
-  <p>Information will be added as the feature develops</p>
+  <p>Initially, this is a processor inspection window that will be used to step through the program and watch the registers change.</p>
   <br>
   <header>
     <a name="Notes"><h2>5. Notes and Lessons Learned</h2></a>
