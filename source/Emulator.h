@@ -26,6 +26,13 @@ public:
 
     QSharedPointer<emulator::Processor>& getProcessor() { return this->processor; }
 
+public slots:
+
+    /**
+     * Begins emulator
+     */
+    void beginEmulation();
+
 private:
     QSharedPointer<emulator::Processor> processor;
 };

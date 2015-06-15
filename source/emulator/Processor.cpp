@@ -1,49 +1,62 @@
 #include "Processor.h"
+#include <iostream> //TODO remove me
+#include <iomanip> //TODO remove me
 
 namespace emulator
 {
 
 Processor::Processor(std::vector<unsigned char> data, QObject *parent) : QObject(parent),
                                                                          memory(new Memory(data)),
-                                                                         continueRunning(false)
+                                                                         continueRunning(true),
+                                                                         stepMode(true)
 {
 
 }
 
 void Processor::execute()
 {
-    this->continueRunning = true;
-    while(this->continueRunning && this->executeNextCommand());
+    this->continueRunning = !this->stepMode;
+    while(this->executeNextCommand());
 }
 
 void Processor::resumeExecution()
 {
-
+    this->continueRunning = true;
 }
 
 void Processor::setStepMode()
 {
-
+    this->setStepMode(true);
 }
 
 void Processor::clearStepMode()
 {
-
+    this->setStepMode(false);
 }
 
 bool Processor::executeNextCommand()
 {
+    this->continueRunning = false | !this->stepMode;
     unsigned char* command = this->memory->getFromMemory(this->memory->getPC(), 2);
+    this->decode(command);
+    return true;
 }
 
 void Processor::decode(unsigned char* operation)
 {
+    std::cout << "Processing a command ";
     unsigned int opNibl3 = (unsigned int)(operation[0] >> 4);
     unsigned int opNibl2 = (unsigned int) (operation[0] & 0x0F);
     unsigned int opNibl1 = (unsigned int)(operation[1] >> 4);
     unsigned int opNibl0 = (unsigned int) (operation[1] & 0x0F);
+    std::cout << std::setw(1) << std::hex << opNibl3;
+    std::cout << std::setw(1) << std::hex << opNibl2;
+    std::cout << std::setw(1) << std::hex << opNibl1;
+    std::cout << std::setw(1) << std::hex << opNibl0 << std::endl;
 
-    //TODO unless otherwise noted automatically , PC += 2
+    while (!this->continueRunning);
+
+    //TODO unless otherwise noted automatically , PC += 2const
 
     switch (opNibl3)
     {
@@ -63,7 +76,8 @@ void Processor::decode(unsigned char* operation)
         break;
     case 0x1:
         {
-            //TODO jump NNN
+            unsigned int newPcVal = opNibl2<<8 | (unsigned int) operation[1];
+            this->memory->setPC(newPcVal);
         }
         break;
     case 0x2:
@@ -73,30 +87,67 @@ void Processor::decode(unsigned char* operation)
         break;
     case 0x3:
         {
-            //TODO pc += 4 if VX == NN
+            std::cout << std::hex << (unsigned int) this->memory->getRegisterVal(opNibl2) << " = ";
+            std::cout << std::hex << (unsigned int) operation[1] << " ?";
+            if (this->memory->getRegisterVal(opNibl2) == (unsigned int) operation[1])
+            {
+                std::cout << " yes" << std::endl;
+                this->memory->setPC(this->memory->getPC() + 4);
+            }
+            else
+            {
+                std::cout << " no" << std::endl;
+                this->memory->setPC(this->memory->getPC() + 2);
+            }
         }
         break;
     case 0x4:
         {
-            //TODO pc += 4 if *VX != NN
+            std::cout << std::hex << this->memory->getRegisterVal(opNibl2) << " != ";
+            std::cout << std::hex << (unsigned int) operation[1] << " ?";
+            if (this->memory->getRegisterVal(opNibl2) != (unsigned int) operation[1])
+            {
+                std::cout << " yes" << std::endl;
+                this->memory->setPC(this->memory->getPC() + 4);
+            }
+            else
+            {
+                std::cout << " no" << std::endl;
+                this->memory->setPC(this->memory->getPC() + 2);
+            }
         }
         break;
     case 0x5:
         {
             if (opNibl0 == 0x0)
             {
-                //TODO pc += 4 if *VX == *VY
+                std::cout << std::hex << this->memory->getRegisterVal(opNibl2) << " == ";
+                std::cout << std::hex << this->memory->getRegisterVal(opNibl1) << " ?";
+                if (this->memory->getRegisterVal(opNibl2) == this->memory->getRegisterVal(opNibl1))
+                {
+                    std::cout << " yes" << std::endl;
+                    this->memory->setPC(this->memory->getPC() + 4);
+                }
+                else
+                {
+                    std::cout << " no" << std::endl;
+                    this->memory->setPC(this->memory->getPC() + 2);
+                }
             }
         }
         break;
     case 0x6:
         {
-            //TODO *VX = NN
+            this->memory->setRegisterVal(opNibl2, (unsigned int) operation[1]);
+            this->memory->setPC(this->memory->getPC() + 2);
         }
         break;
     case 0x7:
         {
-            //TODO *VX+=NN
+            unsigned int vx = this->memory->getRegisterVal(opNibl2);
+            vx += (unsigned int) operation[1];
+            this->memory->setRegisterVal(opNibl2, vx);
+            this->memory->setPC(this->memory->getPC() + 2);
         }
         break;
     case 0x8:
@@ -104,16 +155,20 @@ void Processor::decode(unsigned char* operation)
             switch (opNibl0)
             {
             case 0x0:
-                //TODO *Vx = *Vy
+                this->memory->setRegisterVal(opNibl2, this->memory->getRegisterVal(opNibl1));
+                this->memory->setPC(this->memory->getPC() + 2);
                 break;
             case 0x1:
-                //TODO *Vx = *Vx | *VyretVal = assembleVxVyN(SPRITE, opNibl2, opNibl1, opNibl0);
+                this->memory->setRegisterVal(opNibl2, this->memory->getRegisterVal(opNibl1) | this->memory->getRegisterVal(opNibl1));
+                this->memory->setPC(this->memory->getPC() + 2);
                 break;
             case 0x2:
-                //TODO *Vx = *Vx & *Vy
+                this->memory->setRegisterVal(opNibl2, this->memory->getRegisterVal(opNibl1) & this->memory->getRegisterVal(opNibl1));
+                this->memory->setPC(this->memory->getPC() + 2);
                 break;
             case 0x3:
-                //TODO *Vx = *Vx ^ *Vy
+                this->memory->setRegisterVal(opNibl2, this->memory->getRegisterVal(opNibl1) ^ this->memory->getRegisterVal(opNibl1));
+                this->memory->setPC(this->memory->getPC() + 2);
                 break;
             case 0x4:
                 //TODO *Vx = *Vx + *Vy
@@ -143,9 +198,25 @@ void Processor::decode(unsigned char* operation)
         break;
     case 0x9:
         //TODO skip if *Vx != *Vy
+        std::cout << std::hex << this->memory->getRegisterVal(opNibl2) << " != ";
+        std::cout << std::hex << this->memory->getRegisterVal(opNibl1) << " ?";
+        if (this->memory->getRegisterVal(opNibl2) != this->memory->getRegisterVal(opNibl1))
+        {
+            std::cout << " yes" << std::endl;
+            this->memory->setPC(this->memory->getPC() + 4);
+        }
+        else
+        {
+            std::cout << " no" << std::endl;
+            this->memory->setPC(this->memory->getPC() + 2);
+        }
         break;
     case 0xA:
-        //TODO I = nnn
+        {
+            unsigned int newIVal = opNibl2<<8 | (unsigned int) operation[1];
+            this->memory->setI(newIVal);
+            this->memory->setPC(this->memory->getPC() + 2);
+        }
         break;
     case 0xB:
         //TODO PC = nnn + *v0S
@@ -154,7 +225,8 @@ void Processor::decode(unsigned char* operation)
         //TODO Vx = random byte & nn
         break;
     case 0xD:
-        //TODO Sprite
+        //TODO Sprite stuff
+        this->memory->setPC(this->getMemory()->getPC() + 2);
         break;
     case 0xE:
         {
@@ -189,7 +261,12 @@ void Processor::decode(unsigned char* operation)
                 //TODO ST = Vx
                 break;
             case 0x1E:
-                //TODO I = *I + *Vx
+                {
+                    unsigned int i = this->memory->getI();
+                    i += this->getMemory()->getRegisterVal(opNibl2);
+                    this->memory->setI(i);
+                    this->getMemory()->setPC(this->getMemory()->getPC() + 2);
+                }
                 break;
             case 0x29:
                 //TODO I = *VX //Verify

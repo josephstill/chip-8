@@ -54,7 +54,7 @@ unsigned char* Memory::getFromMemory(unsigned int address, unsigned int size)
     unsigned char* data = new unsigned char[size]; //TODO throw exception - segmentation fault
     for (int x = 0; x < size && address + size < this->memory.size(); ++x)
     {
-       data[x] = this->memory[address + size];
+       data[x] = this->memory[address + x];
     }
     return data;
 }
@@ -88,6 +88,12 @@ void Memory::loadCharacters()
             ++storeAddress;
         }
     }
+}
+
+void Memory::setI(unsigned int iVal)
+{
+    this->I = iVal;
+    emit iChange(iVal);
 }
 
 void Memory::setPC(unsigned int val)

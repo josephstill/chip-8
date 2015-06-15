@@ -51,10 +51,14 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::launchEmulator()
 {
     QFile rom(this->filePathEditor->text());
-
     if (rom.exists())
     {
         e = new Emulator(this->filePathEditor->text());
+        gameThread = new QThread();
+        e->moveToThread(gameThread);
+        connect(gameThread, SIGNAL(started()), e, SLOT(beginEmulation()));
+        gameThread->start();
+
         this->ProcessorInspection = new ProcessorInspectionWindow(e->getProcessor());
         this->ProcessorInspection->show();
     }

@@ -49,6 +49,12 @@ public:
      unsigned char* getFromMemory(unsigned int addmemoryress, unsigned int size);
 
      /**
+      * Returns the value of the address register
+      * @return the value of I
+      */
+     unsigned int getI() { return this->I; }
+
+     /**
       * Gets the value from the register given.
       * @param reg The register to read.
       * @return The value from the register.
@@ -60,6 +66,12 @@ public:
       * @return The value of the PC
       */
      unsigned int getPC() const { return this->PC; }
+
+     /**
+      * Sets the address stored in I.
+      * @param iVal
+      */
+     void setI(unsigned int iVal);
 
      /**
       * Updates the vale of the program counter and emits a signal.
@@ -95,6 +107,11 @@ signals:
      * alerts that the program counter has changed.
      */
     void pcChange(unsigned int pcVal);
+
+    /**
+     * alerts that the program counter has changed.
+     */
+    void iChange(unsigned int iVal);
 
     /**
      * Alerts that a register has changed

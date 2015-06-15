@@ -21,6 +21,8 @@ public:
 public slots:
     void registerUpdated(unsigned int reg, unsigned char val);
     void coreDump();
+    void pcUpdated(unsigned int val);
+    void iUpdated(unsigned int val);
 
 private:
     Ui::ProcessorInspectionWindow          *ui;

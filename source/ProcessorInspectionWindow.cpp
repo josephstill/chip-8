@@ -27,14 +27,26 @@ ProcessorInspectionWindow::ProcessorInspectionWindow(QSharedPointer<emulator::Pr
         ui->memoryMap->setItem(4, 3, item);
     }
 
+    {
+        QTableWidgetItem* item = new QTableWidgetItem();
+        item->setText(QString::number(this->processor->getMemory()->getI(), 16));
+        ui->memoryMap->setItem(4, 1, item);
+    }
+
     QTextDocument* dumpText = new QTextDocument();
     dumpText->setDefaultFont(QFont ("Courier", 9));
     this->ui->coreDump->setDocument(dumpText);
 
     connect(this->processor->getMemory().data(), SIGNAL(registerUpdated(unsigned int, unsigned char)),
             this,                                SLOT(registerUpdated(unsigned int, unsigned char)));
+    connect(this->processor->getMemory().data(), SIGNAL(pcChange(unsigned int)),
+            this,                                SLOT(pcUpdated(unsigned int)));
+    connect(this->processor->getMemory().data(), SIGNAL(iChange(unsigned int)),
+            this,                                SLOT(iUpdated(unsigned int)));
     connect(this->ui->dumpButton,                SIGNAL(clicked()),
             this,                                SLOT(coreDump()));
+    connect(this->ui->stepButton,                SIGNAL(clicked()),
+            this->processor.data(),              SLOT(resumeExecution()));
 
 }
 
@@ -46,9 +58,25 @@ ProcessorInspectionWindow::~ProcessorInspectionWindow()
 
 void ProcessorInspectionWindow::registerUpdated(unsigned int reg, unsigned char val)
 {
-    int regX = (reg % 4);
-    int regY = (reg / 4) + 1;
-    this->ui->memoryMap->item(regX, regY)->setText(QString::number(val, 16));
+    int registerNumber = 0;
+    for(int x = 0; x < 4; ++x)
+    {
+        for(int y = 1; y < 8; y+=2)
+        {
+            ui->memoryMap->item(x, y)->setText(QString::number(this->processor->getMemory()->getRegisterVal(registerNumber), 16));
+            ++registerNumber;
+        }
+    }
+}
+
+void ProcessorInspectionWindow::pcUpdated(unsigned int val)
+{
+    this->ui->memoryMap->item(4, 3)->setText(QString::number(val, 16));
+}
+
+void ProcessorInspectionWindow::iUpdated(unsigned int val)
+{
+   this->ui->memoryMap->item(4, 1)->setText(QString::number(val, 16));
 }
 
 void ProcessorInspectionWindow::coreDump()

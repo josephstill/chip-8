@@ -12,3 +12,8 @@ Emulator::~Emulator()
 {
 
 }
+
+void Emulator::beginEmulation()
+{
+    this->processor->execute();
+}

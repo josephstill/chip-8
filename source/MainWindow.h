@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QFrame>
 #include <QFileDialog>
+#include <QThread>
 #include "Emulator.h"
 class MainWindow : public QWidget
 {
@@ -29,12 +30,14 @@ protected:
 private slots:
 	void launchEmulator();
 	void launchDisassembler();
-	void launchHexDump();
+    void launchHexDump();
 	void launchBrowser();
 	void disassemblerClosed();
 	void hexWindowClosed();
 
 private:
+
+    QThread*           gameThread;
 
     QLineEdit*         filePathEditor;
     QPushButton*       browseButton;
