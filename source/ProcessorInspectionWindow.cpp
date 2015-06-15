@@ -55,9 +55,9 @@ ProcessorInspectionWindow::ProcessorInspectionWindow(QSharedPointer<emulator::Pr
             this,                                SLOT(pcUpdated(unsigned int)));
     connect(this->processor->getMemory().data(), SIGNAL(iChange(unsigned int)),
             this,                                SLOT(iUpdated(unsigned int)));
-    connect(this->processor->getMemory().data(), SIGNAL(dtChange(unsigned int)),
+    connect(this->processor->getMemory().data(), SIGNAL(dtChanged(unsigned int)),
             this,                                SLOT(dtUpdated(unsigned int)));
-    connect(this->processor->getMemory().data(), SIGNAL(stChange(unsigned int)),
+    connect(this->processor->getMemory().data(), SIGNAL(stChanged(unsigned int)),
             this,                                SLOT(stUpdated(unsigned int)));
     connect(this->processor.data(),              SIGNAL(startingCommand(unsigned char*)),
             this,                                SLOT(commandUpdated(unsigned char*)));

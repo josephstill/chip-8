@@ -47,6 +47,7 @@ bool Processor::executeNextCommand()
     this->continueRunning = false | !this->stepMode;
     unsigned char* command = this->memory->getFromMemory(this->memory->getPC(), 2);
     emit startingCommand(command);
+    while (!this->continueRunning); //If we are paused, wait to be unpaused
     this->decode(command);
     delete command;
     return true;
@@ -54,17 +55,10 @@ bool Processor::executeNextCommand()
 
 void Processor::decode(unsigned char* operation)
 {
-    std::cout << "Processing a command ";
     unsigned int opNibl3 = (unsigned int)(operation[0] >> 4);
     unsigned int opNibl2 = (unsigned int) (operation[0] & 0x0F);
     unsigned int opNibl1 = (unsigned int)(operation[1] >> 4);
     unsigned int opNibl0 = (unsigned int) (operation[1] & 0x0F);
-    std::cout << std::setw(1) << std::hex << opNibl3;
-    std::cout << std::setw(1) << std::hex << opNibl2;
-    std::cout << std::setw(1) << std::hex << opNibl1;
-    std::cout << std::setw(1) << std::hex << opNibl0 << std::endl;
-
-    while (!this->continueRunning);
 
     switch (opNibl3)
     {
@@ -92,7 +86,7 @@ void Processor::decode(unsigned char* operation)
             }
             else
             {
-                //TODO segmentation fault
+                emit segmentationFault();
             }
         }
         break;
@@ -107,12 +101,12 @@ void Processor::decode(unsigned char* operation)
                 }
                 else
                 {
-                    //TODO stack overflow
+                   emit stackOverflow();
                 }
             }
             else
             {
-                //TODO segmentation fault
+                emit segmentationFault();
             }
         }
         break;
@@ -324,16 +318,19 @@ void Processor::decode(unsigned char* operation)
             switch (operation[1])
             {
             case 0x07:
-                //TODO Vx = *dt
+                this->memory->setRegisterVal(opNibl2, this->memory->getDT());
+                this->memory->setPC(this->memory->getPC() + 2);
                 break;
             case 0x0A:
                 //TODO Vk = key press
                 break;
             case 0x15:
-                //TODO DT = Vx
+                this->memory->setDT(this->memory->getRegisterVal(opNibl2));
+                this->memory->setPC(this->memory->getPC() + 2);
                 break;
             case 0x18:
-                //TODO ST = Vx
+                this->memory->setST(this->memory->getRegisterVal(opNibl2));
+                this->memory->setPC(this->memory->getPC() + 2);
                 break;
             case 0x1E:
                 {
@@ -344,21 +341,75 @@ void Processor::decode(unsigned char* operation)
                 }
                 break;
             case 0x29:
-                //TODO I = *VX //Verify
+                {
+                    this->memory->setI(this->memory->getRegisterVal(opNibl2) * 5);
+                    this->getMemory()->setPC(this->getMemory()->getPC() + 2);
+                }
                 break;
             case 0x33:
-                //TODO Store BCD representation of Vx in memory locations I, I+1, and I+2.
+                {
+                    unsigned char val = (unsigned char) this->memory->getRegisterVal(opNibl2);
+                    if (!this->memory->writeToMemory(this->memory->getI(), val / 100))
+                    {
+                        emit segmentationFault();
+                    }
+
+                    val %= 100;
+
+                    if (!this->memory->writeToMemory(this->memory->getI(), val + 1 / 10))
+                    {
+                        emit segmentationFault();
+                    }
+
+                    val %= 10;
+
+                    if (!this->memory->writeToMemory(this->memory->getI(), val + 2))
+                    {
+                        emit segmentationFault();
+                    }
+                    this->getMemory()->setPC(this->getMemory()->getPC() + 2);
+
+                }
                 break;
             case 0x55:
-                //TODO Store registers V0 through Vx in memory starting at location I.
+                {
+                    for (unsigned int x = 0; x <= opNibl2; ++x)
+                    {
+                        if (!this->memory->writeToMemory(this->memory->getI() + x, this->memory->getRegisterVal(x)))
+                        {
+                            emit segmentationFault();
+                            break;
+                        }
+                    }
+                    this->getMemory()->setPC(this->getMemory()->getPC() + 2);
+                }
                 break;
             case 0x65:
-                //TODO Read registers V0 through Vx from memory starting at location I.
+                {
+                    for (unsigned int x = 0; x <= opNibl2; ++x)
+                    {
+                        unsigned int addressInMem = this->memory->getI() + x;
+                        unsigned char* val = this->memory->getFromMemory(addressInMem, 1);
+                        this->memory->setRegisterVal(x, val[0]);
+                        delete val;
+                    }
+                    this->getMemory()->setPC(this->getMemory()->getPC() + 2);
+                }
                 break;
             }
         }
         break;
     }
+}
+
+void Processor::catchSegmentationFault()
+{
+    emit segmentationFault();
+}
+
+void Processor::catchStackOverflow()
+{
+    emit stackOverflow();
 }
 
 }

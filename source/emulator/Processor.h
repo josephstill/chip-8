@@ -49,7 +49,21 @@ public:
 
 signals:
 
+    /**
+     * Alerts that the processor is starting a new command
+     * @param command The command
+     */
     void startingCommand(unsigned char* command);
+
+    /**
+     * Alerts of a segmentation fault
+     */
+    void segmentationFault();
+
+    /**
+     * Alerts of a stack overflow
+     */
+    void stackOverflow();
 
 public slots:
 
@@ -67,6 +81,17 @@ public slots:
      * Enables the execution of the rom as normal.
      */
     void clearStepMode();
+
+    /**
+     * Lestens for segmentation faults
+     */
+    void catchSegmentationFault();
+
+    /**
+     * Alerts of stack overflows
+     */
+    void catchStackOverflow();
+
 
 private:
 

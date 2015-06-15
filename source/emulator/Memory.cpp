@@ -53,7 +53,7 @@ void Memory::clearScreen()
 
 unsigned char* Memory::getFromMemory(unsigned int address, unsigned int size)
 {
-    unsigned char* data = new unsigned char[size]; //TODO throw exception - segmentation fault
+    unsigned char* data = new unsigned char[size];
     for (int x = 0; x < size && address + size < this->memory.size(); ++x)
     {
        data[x] = this->memory[address + x];
@@ -134,6 +134,17 @@ bool Memory::pushStack(unsigned int address)
     }
     return false;
 }
+
+bool Memory::writeToMemory(unsigned int address, unsigned char value)
+{
+    if (address < MEMORY_SIZE)
+    {
+        this->memory[address] = value;
+        return true;
+    }
+    return false;
+}
+
 
 std::string Memory::toString() const
 {

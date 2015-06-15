@@ -130,6 +130,14 @@ public:
       */
      bool pushStack(unsigned int address);
 
+     /**
+      * Writes the given value to memory in the given place.
+      * @param address The address to write.
+      * @param value The value to write.
+      * @return True if the write was successful;
+      */
+     bool writeToMemory(unsigned int address, unsigned char value);
+
      //This is for core dumps
      friend std::ostream& operator<<(std::ostream& output, const Memory& memory);
 
