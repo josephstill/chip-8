@@ -1,7 +1,5 @@
 #include "Processor.h"
 #include <QTime>
-#include <iostream> //TODO remove me
-#include <iomanip> //TODO remove me
 
 namespace emulator
 {

@@ -7,6 +7,9 @@
 
 #include "emulator/Processor.h"
 
+/**
+ * This class defines the emulator.
+ */
 class Emulator: public QObject
 {
     Q_OBJECT
@@ -24,6 +27,10 @@ public:
      */
     ~Emulator();
 
+    /**
+     * Returns the processor object.
+     * @return The processor.
+     */
     QSharedPointer<emulator::Processor>& getProcessor() { return this->processor; }
 
 public slots:
