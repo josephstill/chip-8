@@ -47,6 +47,10 @@ public:
      */
     void stop() { this->continueRunning = false; }
 
+signals:
+
+    void startingCommand(unsigned char* command);
+
 public slots:
 
     /**

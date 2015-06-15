@@ -17,7 +17,7 @@ public:
      * Constructs an emulator that is loaded with a ROM at the given file path.
      * @param filePath The path to the ROM to load.
      */
-    Emulator(QString filePath);
+    Emulator(QString filePath, bool stepMode = true);
 
     /**
      * Destructor

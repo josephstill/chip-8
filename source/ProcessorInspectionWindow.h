@@ -23,6 +23,7 @@ public slots:
     void coreDump();
     void pcUpdated(unsigned int val);
     void iUpdated(unsigned int val);
+    void commandUpdated(unsigned char* command);
 
 private:
     Ui::ProcessorInspectionWindow          *ui;

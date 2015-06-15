@@ -43,6 +43,8 @@ ProcessorInspectionWindow::ProcessorInspectionWindow(QSharedPointer<emulator::Pr
             this,                                SLOT(pcUpdated(unsigned int)));
     connect(this->processor->getMemory().data(), SIGNAL(iChange(unsigned int)),
             this,                                SLOT(iUpdated(unsigned int)));
+    connect(this->processor.data(),              SIGNAL(startingCommand(unsigned char*)),
+            this,                                SLOT(commandUpdated(unsigned char*)));
     connect(this->ui->dumpButton,                SIGNAL(clicked()),
             this,                                SLOT(coreDump()));
     connect(this->ui->stepButton,                SIGNAL(clicked()),
@@ -77,6 +79,13 @@ void ProcessorInspectionWindow::pcUpdated(unsigned int val)
 void ProcessorInspectionWindow::iUpdated(unsigned int val)
 {
    this->ui->memoryMap->item(4, 1)->setText(QString::number(val, 16));
+}
+
+void ProcessorInspectionWindow::commandUpdated(unsigned char* command)
+{
+    unsigned int val = ((unsigned int) command[0])<<8 | (unsigned int) command[1];
+    QString valToDisplay = QString::number(val, 16);
+    this->ui->commandDisplay->setText(valToDisplay);
 }
 
 void ProcessorInspectionWindow::coreDump()

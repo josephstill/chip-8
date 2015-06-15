@@ -38,7 +38,9 @@ bool Processor::executeNextCommand()
 {
     this->continueRunning = false | !this->stepMode;
     unsigned char* command = this->memory->getFromMemory(this->memory->getPC(), 2);
+    emit startingCommand(command);
     this->decode(command);
+    delete command;
     return true;
 }
 
@@ -87,16 +89,12 @@ void Processor::decode(unsigned char* operation)
         break;
     case 0x3:
         {
-            std::cout << std::hex << (unsigned int) this->memory->getRegisterVal(opNibl2) << " = ";
-            std::cout << std::hex << (unsigned int) operation[1] << " ?";
             if (this->memory->getRegisterVal(opNibl2) == (unsigned int) operation[1])
             {
-                std::cout << " yes" << std::endl;
                 this->memory->setPC(this->memory->getPC() + 4);
             }
             else
             {
-                std::cout << " no" << std::endl;
                 this->memory->setPC(this->memory->getPC() + 2);
             }
         }
