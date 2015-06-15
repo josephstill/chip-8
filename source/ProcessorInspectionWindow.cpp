@@ -32,9 +32,9 @@ ProcessorInspectionWindow::ProcessorInspectionWindow(QSharedPointer<emulator::Pr
     this->ui->coreDump->setDocument(dumpText);
 
     connect(this->processor->getMemory().data(), SIGNAL(registerUpdated(unsigned int, unsigned char)),
-            this,                                 SLOT(registerUpdated(unsigned int, unsigned char)));
-    connect(this->ui->dumpButton,                 SIGNAL(clicked()),
-            this,                                 SLOT(coreDump()));
+            this,                                SLOT(registerUpdated(unsigned int, unsigned char)));
+    connect(this->ui->dumpButton,                SIGNAL(clicked()),
+            this,                                SLOT(coreDump()));
 
 }
 
@@ -46,8 +46,9 @@ ProcessorInspectionWindow::~ProcessorInspectionWindow()
 
 void ProcessorInspectionWindow::registerUpdated(unsigned int reg, unsigned char val)
 {
-
-
+    int regX = (reg % 4);
+    int regY = (reg / 4) + 1;
+    this->ui->memoryMap->item(regX, regY)->setText(QString::number(val, 16));
 }
 
 void ProcessorInspectionWindow::coreDump()

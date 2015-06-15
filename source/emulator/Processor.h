@@ -37,6 +37,12 @@ public:
     QSharedPointer<Memory>& getMemory() { return this->memory; }
 
     /**
+     * Enables or disables step mode.
+     * @param stepMode True for step mode on.
+     */
+    void setStepMode(bool stepMode) { this->stepMode = stepMode; }
+
+    /**
      *Stops execution of the ROM.
      */
     void stop() { this->continueRunning = false; }
@@ -61,8 +67,10 @@ public slots:
 private:
 
     bool executeNextCommand();
+    void decode(unsigned char* operation);
 
     bool                   continueRunning;
+    bool                   stepMode;
     QSharedPointer<Memory> memory;
 };
 
