@@ -31,6 +31,8 @@ Memory::Memory(std::vector<unsigned char> program, QObject *parent) : QObject(pa
                                                                       PC(PROGRAM_START),
                                                                       V(16, 0),
                                                                       I(0),
+                                                                      delay(0),
+                                                                      sound(0),
                                                                       memory(MEMORY_SIZE, 0)
 {
     this->loadBuffer(program);
@@ -90,6 +92,12 @@ void Memory::loadCharacters()
     }
 }
 
+void Memory::setDT(unsigned int value)
+{
+    this->delay = value;
+    emit dtChanged(value);
+}
+
 void Memory::setI(unsigned int iVal)
 {
     this->I = iVal;
@@ -109,6 +117,22 @@ void Memory::setRegisterVal(unsigned int reg, unsigned char data)
         this->V[reg] = data;
         emit registerUpdated(reg, data);
     }
+}
+
+void Memory::setST(unsigned int val)
+{
+    this->sound = val;
+    emit stChanged(val);
+}
+
+bool Memory::pushStack(unsigned int address)
+{
+    if (this->stack.size() <= 16)
+    {
+        this->stack.push(address);
+        return true;
+    }
+    return false;
 }
 
 std::string Memory::toString() const

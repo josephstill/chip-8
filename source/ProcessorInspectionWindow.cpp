@@ -33,6 +33,18 @@ ProcessorInspectionWindow::ProcessorInspectionWindow(QSharedPointer<emulator::Pr
         ui->memoryMap->setItem(4, 1, item);
     }
 
+    {
+        QTableWidgetItem* item = new QTableWidgetItem();
+        item->setText(QString::number(this->processor->getMemory()->getDT(), 16));
+        ui->memoryMap->setItem(4, 5, item);
+    }
+
+    {
+        QTableWidgetItem* item = new QTableWidgetItem();
+        item->setText(QString::number(this->processor->getMemory()->getST(), 16));
+        ui->memoryMap->setItem(4, 7, item);
+    }
+
     QTextDocument* dumpText = new QTextDocument();
     dumpText->setDefaultFont(QFont ("Courier", 9));
     this->ui->coreDump->setDocument(dumpText);
@@ -43,13 +55,20 @@ ProcessorInspectionWindow::ProcessorInspectionWindow(QSharedPointer<emulator::Pr
             this,                                SLOT(pcUpdated(unsigned int)));
     connect(this->processor->getMemory().data(), SIGNAL(iChange(unsigned int)),
             this,                                SLOT(iUpdated(unsigned int)));
+    connect(this->processor->getMemory().data(), SIGNAL(dtChange(unsigned int)),
+            this,                                SLOT(dtUpdated(unsigned int)));
+    connect(this->processor->getMemory().data(), SIGNAL(stChange(unsigned int)),
+            this,                                SLOT(stUpdated(unsigned int)));
     connect(this->processor.data(),              SIGNAL(startingCommand(unsigned char*)),
             this,                                SLOT(commandUpdated(unsigned char*)));
     connect(this->ui->dumpButton,                SIGNAL(clicked()),
             this,                                SLOT(coreDump()));
     connect(this->ui->stepButton,                SIGNAL(clicked()),
             this->processor.data(),              SLOT(resumeExecution()));
-
+    connect(this->ui->playButton,                SIGNAL(clicked()),
+            this,                                SLOT(play()));
+    connect(this->ui->pauseButton,               SIGNAL(clicked()),
+            this,                                SLOT(stop()));
 }
 
 ProcessorInspectionWindow::~ProcessorInspectionWindow()
@@ -93,4 +112,24 @@ void ProcessorInspectionWindow::coreDump()
     QString dump = QString::fromStdString(this->processor->getMemory()->toString());
     this->ui->coreDump->document()->clear();
     this->ui->coreDump->document()->setPlainText(dump);
+}
+
+void ProcessorInspectionWindow::dtUpdated(unsigned int val)
+{
+   this->ui->memoryMap->item(4, 5)->setText(QString::number(val, 16));
+}
+
+void ProcessorInspectionWindow::stUpdated(unsigned int val)
+{
+    this->ui->memoryMap->item(4, 7)->setText(QString::number(val, 16));
+}
+
+void ProcessorInspectionWindow::play()
+{
+    this->processor->setStepMode(false);
+}
+
+void ProcessorInspectionWindow::stop()
+{
+    this->processor->setStepMode(true);
 }

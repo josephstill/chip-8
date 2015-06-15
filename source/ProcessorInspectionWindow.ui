@@ -102,6 +102,12 @@
            <property name="text">
             <string>V3</string>
            </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
           </item>
           <item row="1" column="0">
            <property name="text">
@@ -139,6 +145,12 @@
           <item row="1" column="6">
            <property name="text">
             <string>V7</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
            </property>
           </item>
           <item row="2" column="0">
@@ -178,6 +190,12 @@
            <property name="text">
             <string>VB</string>
            </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
           </item>
           <item row="3" column="0">
            <property name="text">
@@ -216,6 +234,12 @@
            <property name="text">
             <string>VF</string>
            </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
           </item>
           <item row="4" column="0">
            <property name="text">
@@ -231,6 +255,28 @@
           <item row="4" column="2">
            <property name="text">
             <string>PC</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+          <item row="4" column="4">
+           <property name="text">
+            <string>DT</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </item>
+          <item row="4" column="6">
+           <property name="text">
+            <string>ST</string>
            </property>
            <property name="font">
             <font>

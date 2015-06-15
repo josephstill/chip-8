@@ -24,6 +24,10 @@ public slots:
     void pcUpdated(unsigned int val);
     void iUpdated(unsigned int val);
     void commandUpdated(unsigned char* command);
+    void dtUpdated(unsigned int val);
+    void stUpdated(unsigned int val);
+    void play();
+    void stop();
 
 private:
     Ui::ProcessorInspectionWindow          *ui;

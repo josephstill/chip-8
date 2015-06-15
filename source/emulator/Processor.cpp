@@ -1,4 +1,5 @@
 #include "Processor.h"
+#include <QTime>
 #include <iostream> //TODO remove me
 #include <iomanip> //TODO remove me
 
@@ -15,8 +16,15 @@ Processor::Processor(std::vector<unsigned char> data, QObject *parent) : QObject
 
 void Processor::execute()
 {
+    qsrand(QTime::currentTime().msec());
     this->continueRunning = !this->stepMode;
     while(this->executeNextCommand());
+}
+
+void Processor::setStepMode(bool stepMode)
+{
+    this->stepMode = stepMode;
+    this->continueRunning = !stepMode;
 }
 
 void Processor::resumeExecution()
@@ -58,8 +66,6 @@ void Processor::decode(unsigned char* operation)
 
     while (!this->continueRunning);
 
-    //TODO unless otherwise noted automatically , PC += 2const
-
     switch (opNibl3)
     {
     case 0x0:
@@ -69,22 +75,45 @@ void Processor::decode(unsigned char* operation)
             this->memory->clearScreen();
             break;
         case 0xee:
-            //TODO return
-            break;
-        default:
-            //TODO no opp code
+            {
+                this->getMemory()->setPC(this->memory->popStack()); //TODO stack issues
+                this->memory->setPC(this->memory->getPC() + 2);
+
+            }
             break;
         }
         break;
     case 0x1:
         {
             unsigned int newPcVal = opNibl2<<8 | (unsigned int) operation[1];
-            this->memory->setPC(newPcVal);
+            if (newPcVal < 0x1000)
+            {
+                this->memory->setPC(newPcVal);
+            }
+            else
+            {
+                //TODO segmentation fault
+            }
         }
         break;
     case 0x2:
         {
-            //TODO Call sub routine at NNN
+            unsigned int callAddr = opNibl2<<8 | (unsigned int) operation[1];
+            if (callAddr < 0x1000)
+            {
+                if (this->memory->pushStack(this->memory->getPC()))
+                {
+                    this->memory->setPC(callAddr);
+                }
+                else
+                {
+                    //TODO stack overflow
+                }
+            }
+            else
+            {
+                //TODO segmentation fault
+            }
         }
         break;
     case 0x3:
@@ -101,16 +130,12 @@ void Processor::decode(unsigned char* operation)
         break;
     case 0x4:
         {
-            std::cout << std::hex << this->memory->getRegisterVal(opNibl2) << " != ";
-            std::cout << std::hex << (unsigned int) operation[1] << " ?";
             if (this->memory->getRegisterVal(opNibl2) != (unsigned int) operation[1])
             {
-                std::cout << " yes" << std::endl;
                 this->memory->setPC(this->memory->getPC() + 4);
             }
             else
             {
-                std::cout << " no" << std::endl;
                 this->memory->setPC(this->memory->getPC() + 2);
             }
         }
@@ -119,16 +144,12 @@ void Processor::decode(unsigned char* operation)
         {
             if (opNibl0 == 0x0)
             {
-                std::cout << std::hex << this->memory->getRegisterVal(opNibl2) << " == ";
-                std::cout << std::hex << this->memory->getRegisterVal(opNibl1) << " ?";
                 if (this->memory->getRegisterVal(opNibl2) == this->memory->getRegisterVal(opNibl1))
                 {
-                    std::cout << " yes" << std::endl;
                     this->memory->setPC(this->memory->getPC() + 4);
                 }
                 else
                 {
-                    std::cout << " no" << std::endl;
                     this->memory->setPC(this->memory->getPC() + 2);
                 }
             }
@@ -169,43 +190,94 @@ void Processor::decode(unsigned char* operation)
                 this->memory->setPC(this->memory->getPC() + 2);
                 break;
             case 0x4:
-                //TODO *Vx = *Vx + *Vy
-                //TODO *VF = carry
+                {
+                    unsigned int value = this->memory->getRegisterVal(opNibl2) + this->memory->getRegisterVal(opNibl1);
+                    this->memory->setRegisterVal(opNibl2, value % 256);
+                    if (value > 255)
+                    {
+                        this->memory->setRegisterVal(0xf, 1);
+                    }
+                    else
+                    {
+                        this->memory->setRegisterVal(0xf, 0);
+                    }
+                    this->memory->setPC(this->memory->getPC() + 2);
+                }
                 break;
             case 0x5:
-                //TODO *Vx = *Vx - *Vy
-                //TODO *VF = borrow
+                {
+                    unsigned int firstVal = this->memory->getRegisterVal(opNibl2);
+                    unsigned int secondVal = this->memory->getRegisterVal(opNibl1);
+                    unsigned int value = firstVal - secondVal;
+                    if (firstVal > secondVal)
+                    {
+                        this->memory->setRegisterVal(0xf, 1);
+                    }
+                    else
+                    {
+                        this->memory->setRegisterVal(0xf, 0);
+                    }
+                    this->memory->setRegisterVal(opNibl2, value % 256);
+                    this->memory->setPC(this->memory->getPC() + 2);
+                }
                 break;
             case 0x6:
-                //TODO *Vx = *vx >> 2 (SHR)
-                //Vf = least sig bit
+                {
+                    unsigned int value = this->memory->getRegisterVal(opNibl2);
+                    if (value & 0x1)
+                    {
+                        this->memory->setRegisterVal(0xf, 1);
+                    }
+                    else
+                    {
+                        this->memory->setRegisterVal(0xf, 0);
+                    }
+                    this->memory->setRegisterVal(opNibl2, value>>1);
+                    this->memory->setPC(this->memory->getPC() + 2);
+                }
                 break;
             case 0x7:
-                //TODO *Vx = *Vy - *Vx
-                //TODO *VF = Vy > Vx
+                {
+                    unsigned int firstVal = this->memory->getRegisterVal(opNibl1);
+                    unsigned int secondVal = this->memory->getRegisterVal(opNibl2);
+                    unsigned int value = firstVal - secondVal;
+                    if (firstVal > secondVal)
+                    {
+                        this->memory->setRegisterVal(0xf, 1);
+                    }
+                    else
+                    {
+                        this->memory->setRegisterVal(0xf, 0);
+                    }
+                    this->memory->setRegisterVal(opNibl2, value % 256);
+                    this->memory->setPC(this->memory->getPC() + 2);
+                }
                 break;
             case 0xE:
-                //TODO *Vx = Vx << 2 (SHL)
-                //TODO *VF = most sig bit
-                break;
-            default:
-                //TODO no op code
+                {
+                    unsigned int value = this->memory->getRegisterVal(opNibl2);
+                    if (value & 0x8)
+                    {
+                        this->memory->setRegisterVal(0xf, 1);
+                    }
+                    else
+                    {
+                        this->memory->setRegisterVal(0xf, 0);
+                    }
+                    this->memory->setRegisterVal(opNibl2, (value<<1) % 256);
+                    this->memory->setPC(this->memory->getPC() + 2);
+                }
                 break;
             }
         }
         break;
     case 0x9:
-        //TODO skip if *Vx != *Vy
-        std::cout << std::hex << this->memory->getRegisterVal(opNibl2) << " != ";
-        std::cout << std::hex << this->memory->getRegisterVal(opNibl1) << " ?";
         if (this->memory->getRegisterVal(opNibl2) != this->memory->getRegisterVal(opNibl1))
         {
-            std::cout << " yes" << std::endl;
             this->memory->setPC(this->memory->getPC() + 4);
         }
         else
         {
-            std::cout << " no" << std::endl;
             this->memory->setPC(this->memory->getPC() + 2);
         }
         break;
@@ -217,10 +289,18 @@ void Processor::decode(unsigned char* operation)
         }
         break;
     case 0xB:
-        //TODO PC = nnn + *v0S
+        {
+            unsigned int newPcVal = opNibl2<<8 | (unsigned int) operation[1];
+            newPcVal += this->memory->getRegisterVal(0x0);
+            this->memory->setPC(newPcVal);
+        }
         break;
     case 0xC:
-        //TODO Vx = random byte & nn
+        {
+            unsigned int rand = qrand() % 256;
+            this->memory->setRegisterVal(opNibl2, rand & (unsigned int) operation[1]);
+            this->memory->setPC(this->memory->getPC() + 2);
+        }
         break;
     case 0xD:
         //TODO Sprite stuff
@@ -235,9 +315,6 @@ void Processor::decode(unsigned char* operation)
                 break;
             case 0xA1:
                //TODO PC += 4 if Key with val of Vx not is pressed
-                break;
-            default:
-                //TODO bad op code
                 break;
             }
         }
@@ -278,14 +355,8 @@ void Processor::decode(unsigned char* operation)
             case 0x65:
                 //TODO Read registers V0 through Vx from memory starting at location I.
                 break;
-            default:
-                //TODO bad opp code
-                break;
             }
         }
-        break;
-    default:
-        //TODO bad opp code
         break;
     }
 }

@@ -40,7 +40,7 @@ public:
      * Enables or disables step mode.
      * @param stepMode True for step mode on.
      */
-    void setStepMode(bool stepMode) { this->stepMode = stepMode; }
+    void setStepMode(bool stepMode);
 
     /**
      *Stops execution of the ROM.
