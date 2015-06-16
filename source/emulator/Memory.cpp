@@ -37,18 +37,31 @@ Memory::Memory(std::vector<unsigned char> program, QObject *parent) : QObject(pa
 {
     this->loadBuffer(program);
     this->loadCharacters();
+
+    for (int x = 0; x < 64; x++)
+    {
+        QVector<bool> row(32, false);
+        this->screen.push_back(row);
+    }
+
     this->clearScreen();
 }
 
 Memory::~Memory()
 {
-    std::cout << "Deleting Memory" << std::endl;
+
 }
 
 void Memory::clearScreen()
 {
-    this->screen.clear();
-    emit screenCleared();
+    for (int x = 0; x < this->screen.size(); ++x)
+    {
+        for (int y = 0; y < this->screen[x].size(); ++y)
+        {
+            this->screen[x][y] = false;
+        }
+    }
+    emit screenUpdated();
 }
 
 unsigned char* Memory::getFromMemory(unsigned int address, unsigned int size)
@@ -60,6 +73,19 @@ unsigned char* Memory::getFromMemory(unsigned int address, unsigned int size)
     }
     return data;
 }
+
+bool Memory::getPixel(unsigned int xPos, unsigned int yPos) const
+{
+   if (xPos < this->screen.size() && yPos < this->screen[xPos].size())
+   {
+        return this->screen[xPos][yPos];
+   }
+   else
+   {
+       std::cout << "X: " << xPos << " Y: " << yPos << std::endl;
+   }
+}
+
 
 unsigned char Memory::getRegisterVal(unsigned int reg)
 {
@@ -116,6 +142,19 @@ void Memory::setRegisterVal(unsigned int reg, unsigned char data)
     {
         this->V[reg] = data;
         emit registerUpdated(reg, data);
+    }
+}
+
+void Memory::setPixel(unsigned int xPos, unsigned int yPos, bool value, bool writeCluster)
+{
+    if (xPos < this->screen.size() && yPos < this->screen[xPos].size())
+    {
+        this->screen[xPos][yPos] = value;
+
+        if (!writeCluster)
+        {
+            emit screenUpdated();
+        }
     }
 }
 

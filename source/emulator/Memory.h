@@ -80,6 +80,14 @@ public:
      unsigned int getPC() const { return this->PC; }
 
      /**
+      * Gets the state of a pixel out of memory
+      * @param xVal The x position
+      * @param yVal the y position
+      * @return True if the pixel is lit
+      */
+     bool getPixel(unsigned int xPos, unsigned int yPos) const;
+
+     /**
       * Sets the delay timer to the given value
       * @param value The value to set the delay timer to.
       */
@@ -96,6 +104,14 @@ public:
       * @param val The new value of the program counter
       */
      void setPC(unsigned int val);
+
+     /**
+      * Sets the given pixel to a provided value
+      * @param xPos X position of the pixel
+      * @param yPos Y position of the pixel
+      * @param value The value to set to.
+      */
+     void setPixel(unsigned int xPos, unsigned int yPos, bool value, bool writeCluster = false);
 
      /**
       * Sets the sound time to the given value.
@@ -144,9 +160,9 @@ public:
 signals:
 
     /**
-     * Alerts that the screen has been cleared.
+     * Alerts that the screen has been updated.
      */
-    void screenCleared();
+    void screenUpdated();
 
     /**
      * Alerts that the delay timer has changed
@@ -188,7 +204,7 @@ private:
     unsigned int                           delay;
     unsigned int                           sound;
     QVector<unsigned char>                 memory;
-    QVector<unsigned char>                 screen;
+    QVector< QVector<bool> >               screen;
 };
 
 }

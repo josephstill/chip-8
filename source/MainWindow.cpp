@@ -53,14 +53,12 @@ void MainWindow::launchEmulator()
     QFile rom(this->filePathEditor->text());
     if (rom.exists())
     {
-        e = new Emulator(this->filePathEditor->text());
-        gameThread = new QThread();
-        e->moveToThread(gameThread);
-        connect(gameThread, SIGNAL(started()), e, SLOT(beginEmulation()));
-        gameThread->start();
+        this->emulatorWindow = new EmulatorWindow(this->filePathEditor->text());
+        this->emulatorWindow->show();
+        this->emulateButton->setEnabled(false);
 
-        this->ProcessorInspection = new ProcessorInspectionWindow(e->getProcessor());
-        this->ProcessorInspection->show();
+        connect(this->emulatorWindow, SIGNAL(windowClosing()),
+               this, SLOT(emulatorWindowClosed()));
     }
 }
 
@@ -129,4 +127,11 @@ void MainWindow::hexWindowClosed()
 	this->hexDumpButton->setEnabled(true);
 	disconnect(this->hexDumpWindow, SIGNAL(windowClosing()),
 			   this, SLOT(hexWindowClosed()));
+}
+
+void MainWindow::emulatorWindowClosed()
+{
+    this->emulateButton->setEnabled(true);
+    disconnect(this->emulatorWindow, SIGNAL(windowClosing()),
+               this, SLOT(emulatorWindowClosed()));
 }

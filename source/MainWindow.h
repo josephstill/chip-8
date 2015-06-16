@@ -3,15 +3,14 @@
 
 #include "DisassemblyWindow.h"
 #include "HexDumpWindow.h"
-#include "ProcessorInspectionWindow.h"
+#include "EmulatorWindow.h"
 
 #include <QWidget>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QFrame>
 #include <QFileDialog>
-#include <QThread>
-#include "Emulator.h"
+
 class MainWindow : public QWidget
 {
     Q_OBJECT
@@ -34,10 +33,9 @@ private slots:
 	void launchBrowser();
 	void disassemblerClosed();
 	void hexWindowClosed();
+    void emulatorWindowClosed();
 
 private:
-
-    QThread*           gameThread;
 
     QLineEdit*         filePathEditor;
     QPushButton*       browseButton;
@@ -45,8 +43,8 @@ private:
     QPushButton*       disassembleButton;
     QPushButton*       hexDumpButton;
 
-    Emulator*                  e;
-    DisassemblyWindow*         disassemblyWindow; //TODO this should be a shared pointer
+    EmulatorWindow*            emulatorWindow;
+    DisassemblyWindow*         disassemblyWindow;
     HexDumpWindow*             hexDumpWindow;
     ProcessorInspectionWindow* ProcessorInspection;
 };

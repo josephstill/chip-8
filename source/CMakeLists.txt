@@ -16,7 +16,8 @@ SET(SRC_FILES
     HexDumpWindow.cpp
     Emulator.cpp
     main.cpp
-    ProcessorInspectionWindow.cpp)
+    ProcessorInspectionWindow.cpp
+    EmulatorWindow.cpp)
 
 SET(HEADER_FILES
     ${HEADER_FILES}
@@ -35,7 +36,8 @@ SET(QT_WRAP_HEADERS
     DisassemblyWindow.h
     HexDumpWindow.h
     Emulator.h
-    ProcessorInspectionWindow.h)
+    ProcessorInspectionWindow.h
+    EmulatorWindow.h)
 QT4_WRAP_CPP(MOCSrcs ${QT_WRAP_HEADERS})
 
 ADD_DEFINITIONS(-std=c++11)

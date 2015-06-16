@@ -1,5 +1,6 @@
 #include "Processor.h"
 #include <QTime>
+#include <iostream>
 
 namespace emulator
 {
@@ -48,6 +49,8 @@ bool Processor::executeNextCommand()
     while (!this->continueRunning); //If we are paused, wait to be unpaused
     this->decode(command);
     delete command;
+    std::cout << "Go" << std::endl;
+    //TODO sleep
     return true;
 }
 
@@ -65,12 +68,12 @@ void Processor::decode(unsigned char* operation)
         {
         case 0xe0:
             this->memory->clearScreen();
+            this->memory->setPC(this->memory->getPC() + 2);
             break;
         case 0xee:
             {
                 this->getMemory()->setPC(this->memory->popStack()); //TODO stack issues
                 this->memory->setPC(this->memory->getPC() + 2);
-
             }
             break;
         }
@@ -295,7 +298,43 @@ void Processor::decode(unsigned char* operation)
         }
         break;
     case 0xD:
-        //TODO Sprite stuff
+        {
+            bool collision = false;
+
+            if (opNibl0 > 0)
+            {
+                unsigned char* sprite = this->memory->getFromMemory(this->memory->getI(), opNibl0);
+                int xVal   = opNibl2;
+                int yVal   = opNibl1;
+                int height = opNibl0;
+
+                for (int row = 0; row < height; ++row)
+                {
+                    for (int column = 0; column < 8; ++column)
+                    {
+                        unsigned char bitMask = 0x1<<(7 - column);
+                        unsigned int writeVal = sprite[row] & bitMask;
+                        bool setPixel = writeVal > 0;
+                        if (setPixel && this->memory->getPixel(xVal, yVal))
+                        {
+                            collision |= true;
+                            this->memory->setPixel(xVal, yVal, false, true);
+                        }
+                        else
+                        {
+                            this->memory->setPixel(xVal, yVal, setPixel, true);
+                        }
+                        ++yVal;
+                        yVal %= 64;
+                    }
+                    ++xVal;
+                    xVal %= 32;
+                }
+            }
+            this->memory->setPixel(0, 0, this->memory->getPixel(0, 0)); //hack for now
+            unsigned char col = collision ? 0x1 : 0x0;
+            this->memory->setRegisterVal(0xf, col);
+        }
         this->memory->setPC(this->getMemory()->getPC() + 2);
         break;
     case 0xE:
