@@ -3,7 +3,7 @@
     <h1>Chip-8 Emulation</h1>
     <p>This is an exploration of chip-8 and hardware emulation. The goal of this project is to disassemble a chip 8 ROM and begin to understand the instruction set within. The next step will be to run the ROM on an emulator. Through this project I hope to learn a good bit about how hardware emulation works as well as become more comfortable with byte code and assembly language.</p>
   </header>
-  <p> The following information will provide details in building and running the emulator as well as lessons learned and a summary of my experience with this project. I will also provide links for the purpose of record keeping and quick reference.</p>
+  <p> The following information will provide details in building and running the emulator as well as lessons learned and a summary of my experience with this project. I will also provide links for the purpose of record keeping and quick reference. See <a href="#ToDO">to do</a> for a list of outstanding actions for the project.</p>
   <header>
     <h2>Contents</h2>
   </header>
@@ -21,6 +21,14 @@
     <li><a href="#Links">Links</a></li>
   </ol>
   <br>
+  <header>
+    <a name="ToDO"><h2>To Do</h></a>
+  </header>
+  <ul>
+    <li>Keyboard and 3 related instructions</li>
+    <li>Play the sound</li>
+    <li>Test</li>
+  </ul>
   <header>
     <a name="Dependencies"><h2>1. Dependencies</h2></a>
   </header>
