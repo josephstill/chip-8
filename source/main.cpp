@@ -9,13 +9,14 @@
 void printUsage()
 {
 	std::cout << "Usage: " << std::endl;
-	std::cout << "chip-8 -hxde -f <path to file>" << std::endl;
+    std::cout << "chip-8 -hxd -f <path to file>" << std::endl;
+    std::cout << "-u    Launch the GUI" << std::endl;
 	std::cout << "-f    Set the path to the ROM file" << std::endl;
 	std::cout << "-h    Display help" << std::endl;
 	std::cout << "Mode: (Choose one and only one)" << std::endl;
 	std::cout << "-x    Show hex dump" << std::endl;
-	std::cout << "-d    Disassemble the ROM" << std::endl;
-	std::cout << "-e    Run the ROM on emulator" << std::endl;
+    std::cout << "-d    Disassemble the ROM" << std::endl;
+    std::cout << "No arguments to show the GUI" << std::endl;
 }
 
 int main(int argc, char**argv)
@@ -28,7 +29,7 @@ int main(int argc, char**argv)
 	bool launchUi = false;
 	std::string file;
 
-	while ((condition = getopt(argc, argv, "f:hxdeu")) != -1)
+    while ((condition = getopt(argc, argv, "f:hxdu")) != -1)
 	{
 		switch (condition)
 		{
@@ -47,19 +48,19 @@ int main(int argc, char**argv)
 		case 'd': // Disassemble Mode
 			disassemble = true;
 			break;
-		case 'e': // Emulate Mode
-			emulate = true;
-			break;
 		case 'x': // Hex Dump Mode
 			hexDump = true;
 			break;
+        case 'u':
+            launchUi = true;
+            break;
 		default:
 			printUsage();
 			return 1;
 		}
 	}
 
-	if (!fileSet)
+    if (!fileSet || launchUi)
 	{
 		QApplication::setOrganizationName("Joseph Walker");
 		QApplication::setApplicationName("Application Example");
@@ -79,11 +80,7 @@ int main(int argc, char**argv)
 			std::string hex = disassembler::RomParser::hexDump(file);
 			std::cout << hex;
 		}
-		else if(emulate && !(hexDump || disassemble))
-		{
-			std::cout << "Coming Soon" << std::endl;
-		}
-		else if(disassemble && !(hexDump || emulate))
+        else if(disassemble && !(hexDump || emulate))
 		{
 			Disassembler d(file);
 			std::cout << d.getText();

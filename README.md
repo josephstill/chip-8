@@ -57,13 +57,14 @@
     <samp>
       joseph@Joseph-MacBookPro$ ./chip-8 -h
       Usage: 
-      chip-8 -hxde -f <path to file>
+      chip-8 -hxd -f <path to file>
+      -u    Launch the GUI
       -f    Set the path to the ROM file
       -h    Display help
       Mode: (Choose one and only one)
       -x    Show hex dump
       -d    Disassemble the ROM
-      -e    Run the ROM on emulator
+      No arguments to show the GUI
     </samp>
   </pre>  
   <p>Running the program without the file flag set will cause the UI to launch.</p>

@@ -6,6 +6,7 @@
 #define PROGRAM_START 0x200
 #define MEMORY_SIZE   0x1000
 #define SCREEN_START  0x0f00
+#define STACK_START   0xea0
 
 const static unsigned char CHARACTERS[16][5]=     {{0xF0,0x90,0x90,0x90,0xF0},
                                                    {0x20,0x60,0x20,0x20,0x70},
@@ -82,7 +83,7 @@ bool Memory::getPixel(unsigned int xPos, unsigned int yPos) const
    }
    else
    {
-       std::cout << "X: " << xPos << " Y: " << yPos << std::endl;
+       std::cout << "Bad Pixel Get (" << xPos << "," << yPos << ")" << std::endl;
    }
 }
 
@@ -118,6 +119,11 @@ void Memory::loadCharacters()
     }
 }
 
+void Memory::screenWriteComplete()
+{
+    emit screenUpdated();
+}
+
 void Memory::setDT(unsigned int value)
 {
     this->delay = value;
@@ -145,16 +151,15 @@ void Memory::setRegisterVal(unsigned int reg, unsigned char data)
     }
 }
 
-void Memory::setPixel(unsigned int xPos, unsigned int yPos, bool value, bool writeCluster)
+void Memory::setPixel(unsigned int xPos, unsigned int yPos, bool value)
 {
     if (xPos < this->screen.size() && yPos < this->screen[xPos].size())
     {
         this->screen[xPos][yPos] = value;
-
-        if (!writeCluster)
-        {
-            emit screenUpdated();
-        }
+    }
+    else
+    {
+        std::cout << "Bad Pixel Set (" << xPos << "," << yPos << ")" << std::endl;
     }
 }
 
@@ -202,12 +207,15 @@ std::string Memory::toString() const
     output << "Address Register: " << std::setw(3) << std::hex << this->I << std::endl;
     output << std::endl;
     output << "Memory Contents: " << std::endl;
-    for (int address = 0; address < this->memory.size(); ++address)
+    for (int address = 0; address < STACK_START; ++address)
     {
         if (address %2  == 0) output << ' ';
         if (address %16 == 0) output << std::endl << std::setw(4) << std::hex << address << " ";
         output << std::setw(2) << std::hex << (int) this->memory[address];
     }
+
+    //TODO - If there is time, add stack and screen to core dump
+
     output << std::endl;
     return output.str();
 }

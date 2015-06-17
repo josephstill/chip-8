@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QSharedPointer>
+#include <QTimer>
 #include <vector>
 #include "Memory.h"
 
@@ -92,6 +93,16 @@ public slots:
      */
     void catchStackOverflow();
 
+    /**
+     * Decrements the delay timer
+     */
+    void decrementDt();
+
+    /**
+     * Decrements the sound timer.
+     */
+    void decrementSt();
+
 
 private:
 
@@ -101,6 +112,8 @@ private:
     bool                   continueRunning;
     bool                   stepMode;
     QSharedPointer<Memory> memory;
+    QTimer                 delayTimer;
+    QTimer                 soundTimer;
 };
 
 }

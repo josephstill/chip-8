@@ -88,6 +88,11 @@ public:
      bool getPixel(unsigned int xPos, unsigned int yPos) const;
 
      /**
+      * Notify memory that writing to the screen is complete.
+      */
+     void screenWriteComplete();
+
+     /**
       * Sets the delay timer to the given value
       * @param value The value to set the delay timer to.
       */
@@ -111,7 +116,7 @@ public:
       * @param yPos Y position of the pixel
       * @param value The value to set to.
       */
-     void setPixel(unsigned int xPos, unsigned int yPos, bool value, bool writeCluster = false);
+     void setPixel(unsigned int xPos, unsigned int yPos, bool value);
 
      /**
       * Sets the sound time to the given value.

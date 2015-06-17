@@ -1,13 +1,15 @@
 #include "EmulatorWindow.h"
 
 #include <QPainter>
+#include <iostream>
 
 #define SCREEN_WIDTH  64
 #define SCREEN_HEIGHT 32
 #define PIXEL_SIZE    10
 
 EmulatorWindow::EmulatorWindow(QString filePath, QWidget * parent): QWidget(parent),
-                                                                    emulator(new Emulator(filePath, false)),
+                                                                    emulator(new Emulator(filePath)),
+                                                                    processorInspectionWindow(new ProcessorInspectionWindow(this->emulator->getProcessor())),
                                                                     widthInPixels(SCREEN_WIDTH),
                                                                     heightInPixels(SCREEN_HEIGHT),
                                                                     pixelWeight(PIXEL_SIZE)
@@ -24,6 +26,8 @@ EmulatorWindow::EmulatorWindow(QString filePath, QWidget * parent): QWidget(pare
     this->update();
     this->emulator->moveToThread(&gameThread);
     gameThread.start();
+
+    this->launchProcessorInspection();
 }
 
 
@@ -34,7 +38,7 @@ EmulatorWindow::~EmulatorWindow()
 
 void EmulatorWindow::launchProcessorInspection()
 {
-
+    this->processorInspectionWindow->show();
 }
 
 void EmulatorWindow::refreshScreen()
@@ -51,6 +55,7 @@ void EmulatorWindow::paintEvent( QPaintEvent* event)
                 (this->widthInPixels  * this->pixelWeight) - 1,
                 (this->heightInPixels * this->pixelWeight) - 1);
     painter.fillRect(fill, Qt::black);
+            std::cout << std::endl;
     for (int x = 0; x < this->widthInPixels; ++x)
     {
         for (int y = 0; y < this->heightInPixels; ++y)
@@ -65,7 +70,6 @@ void EmulatorWindow::paintEvent( QPaintEvent* event)
             }
         }
     }
-
 }
 
 void EmulatorWindow::closeEvent (QCloseEvent * event)

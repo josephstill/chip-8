@@ -1,6 +1,10 @@
 #include "Processor.h"
 #include <QTime>
+#include <unistd.h>
 #include <iostream>
+#include <iomanip>
+
+#define SLEEP_TIME 500
 
 namespace emulator
 {
@@ -8,9 +12,20 @@ namespace emulator
 Processor::Processor(std::vector<unsigned char> data, QObject *parent) : QObject(parent),
                                                                          memory(new Memory(data)),
                                                                          continueRunning(true),
-                                                                         stepMode(true)
+                                                                         stepMode(true),
+                                                                         soundTimer(this),
+                                                                         delayTimer(this)
 {
+    connect(&soundTimer,     SIGNAL(timeout()),
+            this,            SLOT(decrementSt()));
+    connect(&delayTimer,     SIGNAL(timeout()),
+            this,            SLOT(decrementDt()));
 
+    soundTimer.setSingleShot(false);
+    delayTimer.setSingleShot(false);
+
+    soundTimer.start(1000/60);
+    delayTimer.start(1000/60);
 }
 
 void Processor::execute()
@@ -49,8 +64,7 @@ bool Processor::executeNextCommand()
     while (!this->continueRunning); //If we are paused, wait to be unpaused
     this->decode(command);
     delete command;
-    std::cout << "Go" << std::endl;
-    //TODO sleep
+    usleep(SLEEP_TIME);
     return true;
 }
 
@@ -304,36 +318,26 @@ void Processor::decode(unsigned char* operation)
             if (opNibl0 > 0)
             {
                 unsigned char* sprite = this->memory->getFromMemory(this->memory->getI(), opNibl0);
-                int xVal   = opNibl2;
-                int yVal   = opNibl1;
+                int xVal   = this->memory->getRegisterVal(opNibl2);
+                int yVal   = this->memory->getRegisterVal(opNibl1);
                 int height = opNibl0;
 
                 for (int row = 0; row < height; ++row)
                 {
-                    for (int column = 0; column < 8; ++column)
+                    xVal = this->memory->getRegisterVal(opNibl2);
+                    for (int cols = 0; cols < 8; ++cols)
                     {
-                        unsigned char bitMask = 0x1<<(7 - column);
-                        unsigned int writeVal = sprite[row] & bitMask;
-                        bool setPixel = writeVal > 0;
-                        if (setPixel && this->memory->getPixel(xVal, yVal))
-                        {
-                            collision |= true;
-                            this->memory->setPixel(xVal, yVal, false, true);
-                        }
-                        else
-                        {
-                            this->memory->setPixel(xVal, yVal, setPixel, true);
-                        }
-                        ++yVal;
-                        yVal %= 64;
+                        unsigned char bitMask = 0x1<<(7 - cols);
+                        bool bitSet = sprite[row] & bitMask;
+                        collision = this->memory->getPixel(xVal, yVal) && bitSet;
+                        this->memory->setPixel(xVal, yVal, collision ? false : bitSet);
+                        ++xVal%=64;
                     }
-                    ++xVal;
-                    xVal %= 32;
+                    ++yVal%=32;
                 }
             }
-            this->memory->setPixel(0, 0, this->memory->getPixel(0, 0)); //hack for now
-            unsigned char col = collision ? 0x1 : 0x0;
-            this->memory->setRegisterVal(0xf, col);
+            this->memory->screenWriteComplete();
+            this->memory->setRegisterVal(0xF, collision ? 0x1 : 0x0);
         }
         this->memory->setPC(this->getMemory()->getPC() + 2);
         break;
@@ -447,6 +451,27 @@ void Processor::catchSegmentationFault()
 void Processor::catchStackOverflow()
 {
     emit stackOverflow();
+}
+
+void Processor::decrementDt()
+{
+    unsigned int dt = this->memory->getDT();
+    if (dt < 0)
+    {
+        --dt;
+        this->memory->setDT(dt);
+    }
+}
+
+void Processor::decrementSt()
+{
+    unsigned int st = this->memory->getST();
+    if (st < 0)
+    {
+        --st;
+        this->memory->setST(st);
+        //TODO sound buzzer
+    }
 }
 
 }
