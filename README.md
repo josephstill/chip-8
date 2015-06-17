@@ -22,7 +22,7 @@
   </ol>
   <br>
   <header>
-    <a name="ToDO"><h2>To Do</h></a>
+    <a name="ToDO"><h2>0. To Do</h></a>
   </header>
   <ul>
     <li>Keyboard and 3 related instructions</li>
