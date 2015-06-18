@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QSharedPointer>
 #include <QTimer>
+#include <QMap>
+#include <QMutex>
 #include <vector>
 #include "Memory.h"
 
@@ -103,17 +105,33 @@ public slots:
      */
     void decrementSt();
 
+    /**
+     * Used to signal to the processor that a key was pressed
+     * @param keyCode
+     */
+    void keyPressed(unsigned char keyCode);
+
+    /**
+     * Used to signal to the processor that a key was released
+     * @param keyCode
+     */
+    void keyReleased(unsigned char keyCode);
+
 
 private:
 
     bool executeNextCommand();
     void decode(unsigned char* operation);
 
-    bool                   continueRunning;
-    bool                   stepMode;
-    QSharedPointer<Memory> memory;
-    QTimer                 delayTimer;
-    QTimer                 soundTimer;
+
+    QMap<unsigned char, bool>       keyState;
+    QMutex                          keyLock;
+
+    bool                            continueRunning;
+    bool                            stepMode;
+    QSharedPointer<Memory>          memory;
+    QTimer                          delayTimer;
+    QTimer                          soundTimer;
 };
 
 }

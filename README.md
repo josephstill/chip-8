@@ -25,8 +25,6 @@
     <a name="ToDO"><h2>0. To Do</h></a>
   </header>
   <ul>
-    <li>Keyboard and 3 related instructions</li>
-    <li>Play the sound</li>
     <li>Test</li>
   </ul>
   <header>

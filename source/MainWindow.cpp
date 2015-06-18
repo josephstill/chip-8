@@ -75,10 +75,6 @@ void MainWindow::launchDisassembler()
 		connect(this->disassemblyWindow, SIGNAL(windowClosing()),
 				this, SLOT(disassemblerClosed()));
 	}
-	else
-	{
-		//TODO add warning window
-	}
 }
 
 void MainWindow::launchHexDump()
@@ -93,10 +89,6 @@ void MainWindow::launchHexDump()
 
 		connect(this->hexDumpWindow, SIGNAL(windowClosing()),
 				this, SLOT(hexWindowClosed()));
-	}
-	else
-	{
-		//TODO add warning window
 	}
 }
 
@@ -119,6 +111,7 @@ void MainWindow::disassemblerClosed()
 	this->disassembleButton->setEnabled(true);
 	disconnect(this->disassemblyWindow, SIGNAL(windowClosing()),
 			   this, SLOT(disassemblerClosed()));
+    delete this->disassemblyWindow;
 }
 
 
@@ -127,6 +120,7 @@ void MainWindow::hexWindowClosed()
 	this->hexDumpButton->setEnabled(true);
 	disconnect(this->hexDumpWindow, SIGNAL(windowClosing()),
 			   this, SLOT(hexWindowClosed()));
+    delete this->hexDumpWindow;
 }
 
 void MainWindow::emulatorWindowClosed()
@@ -134,4 +128,5 @@ void MainWindow::emulatorWindowClosed()
     this->emulateButton->setEnabled(true);
     disconnect(this->emulatorWindow, SIGNAL(windowClosing()),
                this, SLOT(emulatorWindowClosed()));
+    delete this->emulatorWindow;
 }

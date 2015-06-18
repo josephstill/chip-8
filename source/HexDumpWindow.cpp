@@ -3,6 +3,7 @@
 #include <QPlainTextEdit>
 #include <QHBoxLayout>
 #include <QTextCharFormat>
+#include <iostream>
 
 HexDumpWindow::HexDumpWindow(QString romFilePath, QWidget * parent) : QWidget(parent, Qt::Window)
 {
@@ -29,4 +30,3 @@ void HexDumpWindow::closeEvent (QCloseEvent * event)
 {
 	emit windowClosing();
 }
-

@@ -1,6 +1,9 @@
 #include <QWidget>
 #include <QSharedPointer>
 #include <QThread>
+#include <QMap>
+#include <QKeyEvent>
+#include <QMutex>
 
 #include "ProcessorInspectionWindow.h"
 #include "Emulator.h"
@@ -45,6 +48,16 @@ signals:
      */
     void windowClosing();
 
+    /**
+     * Signals that a key was pressed
+     */
+    void keyPressed(unsigned char);
+
+    /**
+     * Signals that a key was released
+     */
+    void keyReleased(unsigned char);
+
 protected:
 
     /**
@@ -56,13 +69,29 @@ protected:
     /**
     * Window closed
     */
-    void closeEvent (QCloseEvent * event);
+    void closeEvent (QCloseEvent* event);
+
+    /**
+     *
+     * @param event
+     */
+    virtual void keyPressEvent(QKeyEvent* event);
+
+    /**
+     *
+     * @param event
+     */
+    virtual void keyReleaseEvent(QKeyEvent* event);
 
 private:
+
+    void loadKeyMap();
 
     QThread                                     gameThread;
     QSharedPointer<Emulator>                    emulator;
     QSharedPointer<ProcessorInspectionWindow>   processorInspectionWindow;
+    QMap<Qt::Key, unsigned char>                keyMap;
+
     int                                         widthInPixels;
     int                                         heightInPixels;
     int                                         pixelWeight;

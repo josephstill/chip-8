@@ -1,10 +1,11 @@
 #include "Processor.h"
 #include <QTime>
+#include <QMutexLocker>
 #include <unistd.h>
 #include <iostream>
 #include <iomanip>
 
-#define SLEEP_TIME 500
+#define SLEEP_TIME 1000
 
 namespace emulator
 {
@@ -313,31 +314,40 @@ void Processor::decode(unsigned char* operation)
         break;
     case 0xD:
         {
-            bool collision = false;
-
             if (opNibl0 > 0)
             {
+                unsigned char fReg = 0x0;
                 unsigned char* sprite = this->memory->getFromMemory(this->memory->getI(), opNibl0);
-                int xVal   = this->memory->getRegisterVal(opNibl2);
-                int yVal   = this->memory->getRegisterVal(opNibl1);
+                unsigned int xVal   = (unsigned int) this->memory->getRegisterVal(opNibl2);
+                unsigned int yVal   = (unsigned int) this->memory->getRegisterVal(opNibl1);
                 int height = opNibl0;
 
                 for (int row = 0; row < height; ++row)
                 {
-                    xVal = this->memory->getRegisterVal(opNibl2);
+                    xVal = (unsigned int) this->memory->getRegisterVal(opNibl2);
                     for (int cols = 0; cols < 8; ++cols)
                     {
                         unsigned char bitMask = 0x1<<(7 - cols);
                         bool bitSet = sprite[row] & bitMask;
-                        collision = this->memory->getPixel(xVal, yVal) && bitSet;
-                        this->memory->setPixel(xVal, yVal, collision ? false : bitSet);
-                        ++xVal%=64;
+                        if (bitSet && this->memory->getPixel(xVal, yVal))
+                        {
+                            this->memory->setPixel(xVal, yVal, false);
+                            fReg = 0x1;
+                        }
+                        else
+                        {
+                            bool setVal = this->memory->getPixel(xVal, yVal) || bitSet;
+                            this->memory->setPixel(xVal, yVal, setVal);
+
+                        }
+                        xVal = (xVal + 1) % 64;
+
                     }
-                    ++yVal%=32;
+                    yVal = (yVal + 1) % 32;
                 }
+                this->memory->screenWriteComplete();
+                this->memory->setRegisterVal(0xF, fReg);
             }
-            this->memory->screenWriteComplete();
-            this->memory->setRegisterVal(0xF, collision ? 0x1 : 0x0);
         }
         this->memory->setPC(this->getMemory()->getPC() + 2);
         break;
@@ -346,10 +356,30 @@ void Processor::decode(unsigned char* operation)
             switch (operation[1])
             {
             case 0x9E:
-                //TODO PC += 4 if Key with val of Vx is pressed
+                {
+                    unsigned char keyVal = this->memory->getRegisterVal(opNibl2);
+                    if (this->keyState.contains(keyVal) && this->keyState[keyVal])
+                    {   
+                        this->memory->setPC(this->getMemory()->getPC() + 4);
+                    }
+                    else
+                    {
+                        this->memory->setPC(this->getMemory()->getPC() + 2);
+                    }
+                }
                 break;
             case 0xA1:
-               //TODO PC += 4 if Key with val of Vx not is pressed
+                {
+                    unsigned char keyVal = this->memory->getRegisterVal(opNibl2);
+                    if (this->keyState.contains(keyVal) && this->keyState[keyVal])
+                    {
+                        this->memory->setPC(this->getMemory()->getPC() + 2);
+                    }
+                    else
+                    {
+                        this->memory->setPC(this->getMemory()->getPC() + 4);
+                    }
+                }
                 break;
             }
         }
@@ -363,7 +393,16 @@ void Processor::decode(unsigned char* operation)
                 this->memory->setPC(this->memory->getPC() + 2);
                 break;
             case 0x0A:
-                //TODO Vk = key press
+                {
+                    for (int x = 0; x < this->keyState.keys().size(); ++x)
+                    {
+                        if(this->keyState[this->keyState.keys()[x]])
+                        {
+                            this->memory->setRegisterVal(opNibl2, this->keyState.keys()[x]);
+                            this->memory->setPC(this->memory->getPC() + 2);
+                        }
+                    }
+                }
                 break;
             case 0x15:
                 this->memory->setDT(this->memory->getRegisterVal(opNibl2));
@@ -456,7 +495,7 @@ void Processor::catchStackOverflow()
 void Processor::decrementDt()
 {
     unsigned int dt = this->memory->getDT();
-    if (dt < 0)
+    if (dt > 0)
     {
         --dt;
         this->memory->setDT(dt);
@@ -466,12 +505,24 @@ void Processor::decrementDt()
 void Processor::decrementSt()
 {
     unsigned int st = this->memory->getST();
-    if (st < 0)
+    if (st > 0)
     {
         --st;
         this->memory->setST(st);
         //TODO sound buzzer
     }
+}
+
+void Processor::keyPressed(unsigned char keyCode)
+{
+    QMutexLocker locker(&keyLock);
+    this->keyState[keyCode] = true;
+}
+
+void Processor::keyReleased(unsigned char keyCode)
+{
+    QMutexLocker locker(&keyLock);
+    this->keyState[keyCode] = false;
 }
 
 }

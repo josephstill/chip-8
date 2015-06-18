@@ -81,10 +81,6 @@ bool Memory::getPixel(unsigned int xPos, unsigned int yPos) const
    {
         return this->screen[xPos][yPos];
    }
-   else
-   {
-       std::cout << "Bad Pixel Get (" << xPos << "," << yPos << ")" << std::endl;
-   }
 }
 
 
@@ -156,10 +152,6 @@ void Memory::setPixel(unsigned int xPos, unsigned int yPos, bool value)
     if (xPos < this->screen.size() && yPos < this->screen[xPos].size())
     {
         this->screen[xPos][yPos] = value;
-    }
-    else
-    {
-        std::cout << "Bad Pixel Set (" << xPos << "," << yPos << ")" << std::endl;
     }
 }
 
