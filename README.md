@@ -21,9 +21,6 @@
     <li><a href="#Links">Links</a></li>
   </ol>
   <br>
-  <header>
-    <a name="ToDO"><h2>0. To Do</h></a>
-  </header>
   <ul>
     <li>Test</li>
   </ul>
@@ -134,13 +131,33 @@
   <header>
     <a name="Emulation"><h3>Emulation</h3></a>
   </header>
-  <p>Initially, this is a processor inspection window that will be used to step through the program and watch the registers change.</p>
-  <br>
+  <p>The emulator is a GUI only feature. Use the file path to and browser to select the ROM file to launch. The emulator launches alongside a processor inspector which provides insight into the state of the virtual processor. It can be used to pause and step through the ROM, step mode; however, key presses do not register correctly in step mode. Clicking the play button resumes execution of the emulator as normal.</p>
+  <p>The keyboard is the standard chip-8 keyboard, 0-9 and a-f. Currently there is only a default mapping implemented. It follows:</p>
+  <ul>
+    <li>0 = X</li>  
+    <li>1 = 1</li>
+    <li>2 = 2</li>
+    <li>3 = 3</li>
+    <li>4 = Q</li>
+    <li>5 = W</li>
+    <li>6 = E</li>
+    <li>7 = A</li>
+    <li>8 = S</li>
+    <li>9 = D</li>
+    <li>A = Z</li>
+    <li>B = C</li>
+    <li>C = 4</li>
+    <li>D = R</li>
+    <li>E = F</li>
+    <li>F = V</li>    
+  </ul>
+  <p>There are some ROMs provided in this repository. These are the ROMs that I have used in the testing of my implementation.</p>
   <header>
     <a name="Notes"><h2>5. Notes and Lessons Learned</h2></a>
-  </header>  
+  </header>
   <p>From looking through some of the sample ROMs, it looks like the jumps may not always fall on an even number instruction. There is an example of this in Space Invaders, which starts with a jump to 0x225. It also appears that there is non instruction data inside some of the ROMs which will make linear parsing of instructions inaccurate. My search led me to a process called recursive decent which involves augmenting a linear disassembly by following links and branches. I will treat any left over information as data and have updated the disassembly output display it. Since I have seen some jumps to uneven address and addresses must be of even size, I am displaying the data in nibble intervals to ensure all of it is displayed.</p>
-  <br>
+  <p>I could have simplified the code by using smaller data types for 16 bit values. This would remove the need for modding. Also, this would be an explicit requirement of 16 bit registers as opposed to implying it by not allowing 32 bit values to have bits above 16 set.</p>
+  <p>Qt provides a beep function that doesn't work for Ubuntu.<p>
   <header>
     <a name="Links"><h2>6. Links</h2></a>
   </header>
