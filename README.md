@@ -21,9 +21,6 @@
     <li><a href="#Links">Links</a></li>
   </ol>
   <br>
-  <ul>
-    <li>Test</li>
-  </ul>
   <header>
     <a name="Dependencies"><h2>1. Dependencies</h2></a>
   </header>
@@ -134,7 +131,7 @@
   <p>The emulator is a GUI only feature. Use the file path to and browser to select the ROM file to launch. The emulator launches alongside a processor inspector which provides insight into the state of the virtual processor. It can be used to pause and step through the ROM, step mode; however, key presses do not register correctly in step mode. Clicking the play button resumes execution of the emulator as normal.</p>
   <p>The keyboard is the standard chip-8 keyboard, 0-9 and a-f. Currently there is only a default mapping implemented. It follows:</p>
   <ul>
-    <li>0 = X</li>  
+    <li>0 = X</li>
     <li>1 = 1</li>
     <li>2 = 2</li>
     <li>3 = 3</li>
