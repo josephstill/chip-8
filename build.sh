@@ -18,4 +18,5 @@ if [ $? -ne 0 ]; then
 fi
 
 echo -e "Starting build."
-cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../source 
+cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../source
+make 

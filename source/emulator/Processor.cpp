@@ -336,6 +336,7 @@ void Processor::decode(unsigned char* operation)
                     }
                     yVal = (yVal + 1) % 32;
                 }
+                delete sprite;
                 this->memory->screenWriteComplete();
                 this->memory->setRegisterVal(0xF, fReg);
             }
