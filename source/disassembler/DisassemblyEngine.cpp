@@ -23,6 +23,12 @@ void DisassemblyEngine::disassemble()
 {
 	this->decode(CHIP_8_START);
 
+    if (this->buffer.size() == 0)
+    {
+        this->disassembly << "ROM Parse Error: The file appears to be empty." << std::endl;
+        return;
+    }
+
 	for (int x = 0; x < this->buffer.size(); ++x)
 	{
 		// Display the address

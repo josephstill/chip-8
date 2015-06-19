@@ -16,6 +16,13 @@ std::string RomParser::hexDump(std::string romFileName)
 {
 	std::stringstream ss;
 	std::vector<RomParser::command> rom = parseRom(romFileName);
+
+    if (rom.size() == 0)
+    {
+        ss << "ROM Parse Error: The file appears to be empty." << std::endl;
+        return ss.str();
+    }
+
 	unsigned long address = 0;
 	ss << std::hex << std::setfill('0');
 	for (int x = 0; x < rom.size(); x++)

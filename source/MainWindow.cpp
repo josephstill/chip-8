@@ -2,6 +2,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QGroupBox>
+#include <QMessageBox>
 #include <QLabel>
 #include <QFile>
 
@@ -51,7 +52,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::launchEmulator()
 {
     QFile rom(this->filePathEditor->text());
-    if (rom.exists())
+    if (rom.exists() && rom.size() > 0)
     {
         this->emulatorWindow = new EmulatorWindow(this->filePathEditor->text());
         this->emulatorWindow->show();
@@ -60,13 +61,17 @@ void MainWindow::launchEmulator()
         connect(this->emulatorWindow, SIGNAL(windowClosing()),
                this, SLOT(emulatorWindowClosed()));
     }
+    else
+    {
+        this->displayInvalidRomWarning();
+    }
 }
 
 void MainWindow::launchDisassembler()
 {
 	QFile rom(this->filePathEditor->text());
 
-	if (rom.exists())
+    if (rom.exists() && rom.size() > 0)
 	{
 		this->disassemblyWindow = new DisassemblyWindow(this->filePathEditor->text());
 		this->disassemblyWindow->show();
@@ -75,13 +80,17 @@ void MainWindow::launchDisassembler()
 		connect(this->disassemblyWindow, SIGNAL(windowClosing()),
 				this, SLOT(disassemblerClosed()));
 	}
+    else
+    {
+        this->displayInvalidRomWarning();
+    }
 }
 
 void MainWindow::launchHexDump()
 {
 	QFile rom(this->filePathEditor->text());
 
-	if (rom.exists())
+    if (rom.exists() && rom.size() > 0)
 	{
 		this->hexDumpWindow = new HexDumpWindow(this->filePathEditor->text());
 		this->hexDumpWindow->show();
@@ -90,6 +99,10 @@ void MainWindow::launchHexDump()
 		connect(this->hexDumpWindow, SIGNAL(windowClosing()),
 				this, SLOT(hexWindowClosed()));
 	}
+    else
+    {
+        this->displayInvalidRomWarning();
+    }
 }
 
 void MainWindow::launchBrowser()
@@ -99,9 +112,9 @@ void MainWindow::launchBrowser()
 	                                                tr("Open ROM File"),
 	                                                path,
 	                                                tr("Chip-8 Files (*.ch8)"));
-	if (!fileName.isEmpty())
+    if (!fileName.isEmpty())
 	{
-		this->filePathEditor->setText(fileName);
+        this->filePathEditor->setText(fileName);
 	}
 }
 
@@ -129,4 +142,11 @@ void MainWindow::emulatorWindowClosed()
     disconnect(this->emulatorWindow, SIGNAL(windowClosing()),
                this, SLOT(emulatorWindowClosed()));
     delete this->emulatorWindow;
+}
+
+void MainWindow::displayInvalidRomWarning()
+{
+    QMessageBox::critical(this,
+                          "Rom Parse Error",
+                          "The ROM file is missing or empty.");
 }

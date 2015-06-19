@@ -1,6 +1,7 @@
 #include "Processor.h"
 #include <QTime>
 #include <QMutexLocker>
+#include <QApplication>
 #include <unistd.h>
 #include <iostream>
 #include <iomanip>
@@ -510,10 +511,15 @@ void Processor::decrementSt()
     if (st > 0)
     {
         --st;
+        QApplication::beep();
+        /*
+         * System tones are known issues with Ubuntu which includes
+         * Qt's ability to make a beep. I included a "Beep" here to
+         * illustrate that the system would be beeping.
+         */
+        std::cout << "Beep" << std::endl;
         this->memory->setST(st);
-        std::cout << "Beep" <<std::endl;
     }
-    std::cout << "No Beep" <<std::endl;
 }
 
 void Processor::keyPressed(unsigned char keyCode)

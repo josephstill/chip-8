@@ -11,6 +11,9 @@
 #include <QFrame>
 #include <QFileDialog>
 
+/**
+ * Constructs the main window for the emmulator.
+ */
 class MainWindow : public QWidget
 {
     Q_OBJECT
@@ -36,6 +39,8 @@ private slots:
     void emulatorWindowClosed();
 
 private:
+
+    void displayInvalidRomWarning();
 
     QLineEdit*         filePathEditor;
     QPushButton*       browseButton;
