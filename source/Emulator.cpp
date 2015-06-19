@@ -17,3 +17,8 @@ void Emulator::beginEmulation()
 {
     this->processor->execute();
 }
+
+void Emulator::stopEmulator()
+{
+    this->processor->stop();
+}

@@ -40,6 +40,11 @@ public slots:
      */
     void beginEmulation();
 
+    /**
+     * Stops emulation
+     */
+    void stopEmulator();
+
 private:
     QSharedPointer<emulator::Processor> processor;
 };

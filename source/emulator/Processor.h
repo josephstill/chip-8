@@ -29,6 +29,11 @@ public:
     Processor(std::vector<unsigned char> data, QObject *parent = 0);
 
     /**
+     * Destructor
+     */
+    ~Processor();
+
+    /**
      * Begins execution of the ROM.
      */
     void execute();
@@ -48,7 +53,7 @@ public:
     /**
      *Stops execution of the ROM.
      */
-    void stop() { this->continueRunning = false; }
+    void stop() { this->exit = true; }
 
 signals:
 
@@ -129,6 +134,7 @@ private:
 
     bool                            continueRunning;
     bool                            stepMode;
+    bool                            exit;
     QSharedPointer<Memory>          memory;
     QTimer                          delayTimer;
     QTimer                          soundTimer;

@@ -86,6 +86,7 @@ protected:
 private:
 
     void loadKeyMap();
+    void cleanUp();
 
     QThread                                     gameThread;
     QSharedPointer<Emulator>                    emulator;

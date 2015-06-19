@@ -15,7 +15,8 @@ Processor::Processor(std::vector<unsigned char> data, QObject *parent) : QObject
                                                                          continueRunning(true),
                                                                          stepMode(true),
                                                                          soundTimer(this),
-                                                                         delayTimer(this)
+                                                                         delayTimer(this),
+                                                                         exit(false)
 {
     connect(&soundTimer,     SIGNAL(timeout()),
             this,            SLOT(decrementSt()));
@@ -27,6 +28,14 @@ Processor::Processor(std::vector<unsigned char> data, QObject *parent) : QObject
 
     soundTimer.start(1000/60);
     delayTimer.start(1000/60);
+}
+
+
+Processor::~Processor()
+{
+    this->exit = true;
+    this->delayTimer.stop();
+    this->soundTimer.stop();
 }
 
 void Processor::execute()
@@ -66,7 +75,7 @@ bool Processor::executeNextCommand()
     this->decode(command);
     delete command;
     usleep(SLEEP_TIME);
-    return true;
+    return !this->exit;
 }
 
 void Processor::decode(unsigned char* operation)
@@ -256,8 +265,8 @@ void Processor::decode(unsigned char* operation)
                 break;
             case 0xE:
                 {
-                    unsigned int value = this->memory->getRegisterVal(opNibl2);
-                    if (value & 0x8)
+                    unsigned char value = this->memory->getRegisterVal(opNibl2);
+                    if (value & 0x80)
                     {
                         this->memory->setRegisterVal(0xf, 1);
                     }
@@ -421,7 +430,7 @@ void Processor::decode(unsigned char* operation)
                 break;
             case 0x33:
                 {
-                    unsigned char val = (unsigned char) this->memory->getRegisterVal(opNibl2);
+                    unsigned char val = this->memory->getRegisterVal(opNibl2);
                     if (!this->memory->writeToMemory(this->memory->getI(), val / 100))
                     {
                         emit segmentationFault();
@@ -429,14 +438,14 @@ void Processor::decode(unsigned char* operation)
 
                     val %= 100;
 
-                    if (!this->memory->writeToMemory(this->memory->getI(), val + 1 / 10))
+                    if (!this->memory->writeToMemory(this->memory->getI() + 1, val / 10))
                     {
                         emit segmentationFault();
                     }
 
                     val %= 10;
 
-                    if (!this->memory->writeToMemory(this->memory->getI(), val + 2))
+                    if (!this->memory->writeToMemory(this->memory->getI() + 2, val))
                     {
                         emit segmentationFault();
                     }
@@ -502,8 +511,9 @@ void Processor::decrementSt()
     {
         --st;
         this->memory->setST(st);
-        //TODO sound buzzer
+        std::cout << "Beep" <<std::endl;
     }
+    std::cout << "No Beep" <<std::endl;
 }
 
 void Processor::keyPressed(unsigned char keyCode)

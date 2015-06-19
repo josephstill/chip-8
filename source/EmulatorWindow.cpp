@@ -2,6 +2,7 @@
 
 #include <QPainter>
 #include <iostream>
+#include <unistd.h>
 
 
 #define SCREEN_WIDTH  64
@@ -25,6 +26,8 @@ EmulatorWindow::EmulatorWindow(QString filePath, QWidget * parent): QWidget(pare
             this,                                               SLOT(refreshScreen()));
     connect(&gameThread,                                        SIGNAL(started()),
             this->emulator.data(),                              SLOT(beginEmulation()));
+    connect(&gameThread,                                        SIGNAL(finished()),
+            this->emulator.data(),                              SLOT(stopEmulator()));
     connect(this,                                               SIGNAL(keyPressed(unsigned char)),
             this->emulator->getProcessor().data(),              SLOT(keyPressed(unsigned char)));
     connect(this,                                               SIGNAL(keyReleased(unsigned char)),
@@ -40,7 +43,7 @@ EmulatorWindow::EmulatorWindow(QString filePath, QWidget * parent): QWidget(pare
 
 EmulatorWindow::~EmulatorWindow()
 {
-
+    this->cleanUp();
 }
 
 void EmulatorWindow::launchProcessorInspection()
@@ -99,16 +102,6 @@ void EmulatorWindow::loadKeyMap()
 
 void EmulatorWindow::closeEvent (QCloseEvent * event)
 {
-    disconnect(this->emulator->getProcessor()->getMemory().data(), SIGNAL(screenUpdated()),
-               this,                                               SLOT(refreshScreen()));
-    disconnect(&gameThread,                                        SIGNAL(started()),
-               this->emulator.data(),                              SLOT(beginEmulation()));
-    disconnect(this,                                               SIGNAL(keyPressed(unsigned char)),
-               this->emulator->getProcessor().data(),              SLOT(keyPressed(unsigned char)));
-    disconnect(this,                                               SIGNAL(keyReleased(unsigned char)),
-               this->emulator->getProcessor().data(),              SLOT(keyReleased(unsigned char)));
-    this->processorInspectionWindow->close();
-    this->emulator->getProcessor()->setStepMode();
     emit windowClosing();
 }
 
@@ -128,4 +121,20 @@ void EmulatorWindow::keyReleaseEvent(QKeyEvent* event)
     {
         emit keyReleased(this->keyMap[(Qt::Key)event->key()]);
     }
+}
+
+void EmulatorWindow::cleanUp()
+{
+    this->emulator->stopEmulator();
+    disconnect(this->emulator->getProcessor()->getMemory().data(), SIGNAL(screenUpdated()),
+               this,                                               SLOT(refreshScreen()));
+    disconnect(&gameThread,                                        SIGNAL(started()),
+               this->emulator.data(),                              SLOT(beginEmulation()));
+    disconnect(&gameThread,                                        SIGNAL(finished()),
+               this->emulator.data(),                              SLOT(stopEmulator()));
+    disconnect(this,                                               SIGNAL(keyPressed(unsigned char)),
+               this->emulator->getProcessor().data(),              SLOT(keyPressed(unsigned char)));
+    disconnect(this,                                               SIGNAL(keyReleased(unsigned char)),
+               this->emulator->getProcessor().data(),              SLOT(keyReleased(unsigned char)));
+    this->processorInspectionWindow->close();
 }

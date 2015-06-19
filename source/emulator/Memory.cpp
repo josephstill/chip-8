@@ -50,7 +50,6 @@ Memory::Memory(std::vector<unsigned char> program, QObject *parent) : QObject(pa
 
 Memory::~Memory()
 {
-
 }
 
 void Memory::clearScreen()

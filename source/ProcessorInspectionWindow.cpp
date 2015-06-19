@@ -73,6 +73,26 @@ ProcessorInspectionWindow::ProcessorInspectionWindow(QSharedPointer<emulator::Pr
 
 ProcessorInspectionWindow::~ProcessorInspectionWindow()
 {
+    disconnect(this->processor->getMemory().data(), SIGNAL(registerUpdated(unsigned int, unsigned char)),
+               this,                                SLOT(registerUpdated(unsigned int, unsigned char)));
+    disconnect(this->processor->getMemory().data(), SIGNAL(pcChange(unsigned int)),
+               this,                                SLOT(pcUpdated(unsigned int)));
+    disconnect(this->processor->getMemory().data(), SIGNAL(iChange(unsigned int)),
+               this,                                SLOT(iUpdated(unsigned int)));
+    disconnect(this->processor->getMemory().data(), SIGNAL(dtChanged(unsigned int)),
+               this,                                SLOT(dtUpdated(unsigned int)));
+    disconnect(this->processor->getMemory().data(), SIGNAL(stChanged(unsigned int)),
+               this,                                SLOT(stUpdated(unsigned int)));
+    disconnect(this->processor.data(),              SIGNAL(startingCommand(unsigned char*)),
+               this,                                SLOT(commandUpdated(unsigned char*)));
+    disconnect(this->ui->dumpButton,                SIGNAL(clicked()),
+               this,                                SLOT(coreDump()));
+    disconnect(this->ui->stepButton,                SIGNAL(clicked()),
+               this->processor.data(),              SLOT(resumeExecution()));
+    disconnect(this->ui->playButton,                SIGNAL(clicked()),
+               this,                                SLOT(play()));
+    disconnect(this->ui->pauseButton,               SIGNAL(clicked()),
+               this,                                SLOT(stop()));
     delete ui;
 }
 
