@@ -128,26 +128,20 @@ void Processor::decode(unsigned char* operation)
         break;
     case 0x3:
         {
-            if (this->memory->getRegisterVal(opNibl2) == (unsigned int) operation[1])
-            {
-                this->memory->setPC(this->memory->getPC() + 4);
-            }
-            else
+            if (this->memory->getRegisterVal(opNibl2) == operation[1])
             {
                 this->memory->setPC(this->memory->getPC() + 2);
             }
+            this->memory->setPC(this->memory->getPC() + 2);
         }
         break;
     case 0x4:
         {
-            if (this->memory->getRegisterVal(opNibl2) != (unsigned int) operation[1])
-            {
-                this->memory->setPC(this->memory->getPC() + 4);
-            }
-            else
+            if (this->memory->getRegisterVal(opNibl2) != operation[1])
             {
                 this->memory->setPC(this->memory->getPC() + 2);
             }
+            this->memory->setPC(this->memory->getPC() + 2);
         }
         break;
     case 0x5:
@@ -156,26 +150,23 @@ void Processor::decode(unsigned char* operation)
             {
                 if (this->memory->getRegisterVal(opNibl2) == this->memory->getRegisterVal(opNibl1))
                 {
-                    this->memory->setPC(this->memory->getPC() + 4);
-                }
-                else
-                {
                     this->memory->setPC(this->memory->getPC() + 2);
                 }
+                this->memory->setPC(this->memory->getPC() + 2);
             }
         }
         break;
     case 0x6:
         {
-            this->memory->setRegisterVal(opNibl2, (unsigned int) operation[1]);
+            this->memory->setRegisterVal(opNibl2, operation[1]);
             this->memory->setPC(this->memory->getPC() + 2);
         }
         break;
     case 0x7:
         {
-            unsigned int vx = this->memory->getRegisterVal(opNibl2);
-            vx += (unsigned int) operation[1];
-            this->memory->setRegisterVal(opNibl2, vx);
+            unsigned char vx = this->memory->getRegisterVal(opNibl2);
+            vx += operation[1];
+            this->memory->setRegisterVal(opNibl2, vx % 256);
             this->memory->setPC(this->memory->getPC() + 2);
         }
         break;
@@ -188,15 +179,15 @@ void Processor::decode(unsigned char* operation)
                 this->memory->setPC(this->memory->getPC() + 2);
                 break;
             case 0x1:
-                this->memory->setRegisterVal(opNibl2, this->memory->getRegisterVal(opNibl1) | this->memory->getRegisterVal(opNibl1));
+                this->memory->setRegisterVal(opNibl2, this->memory->getRegisterVal(opNibl2) | this->memory->getRegisterVal(opNibl1));
                 this->memory->setPC(this->memory->getPC() + 2);
                 break;
             case 0x2:
-                this->memory->setRegisterVal(opNibl2, this->memory->getRegisterVal(opNibl1) & this->memory->getRegisterVal(opNibl1));
+                this->memory->setRegisterVal(opNibl2, this->memory->getRegisterVal(opNibl2) & this->memory->getRegisterVal(opNibl1));
                 this->memory->setPC(this->memory->getPC() + 2);
                 break;
             case 0x3:
-                this->memory->setRegisterVal(opNibl2, this->memory->getRegisterVal(opNibl1) ^ this->memory->getRegisterVal(opNibl1));
+                this->memory->setRegisterVal(opNibl2, this->memory->getRegisterVal(opNibl2) ^ this->memory->getRegisterVal(opNibl1));
                 this->memory->setPC(this->memory->getPC() + 2);
                 break;
             case 0x4:
@@ -400,6 +391,7 @@ void Processor::decode(unsigned char* operation)
                         {
                             this->memory->setRegisterVal(opNibl2, this->keyState.keys()[x]);
                             this->memory->setPC(this->memory->getPC() + 2);
+                            break;
                         }
                     }
                 }
